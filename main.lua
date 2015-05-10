@@ -7,6 +7,7 @@ local imgui = require "imgui"
 local gui = require "gui"
 local utils = require "utils"
 local junk = require "junk"
+local draw = require "draw"
 
 local OFFSET_X = 50
 local OFFSET_Y = 50
@@ -34,7 +35,12 @@ end
 function love.draw()
 	love.graphics.scale( conf.SCALE_GRAPHICS )
 	love.graphics.translate( OFFSET_X, OFFSET_Y )
+	draw.fontSize( 50 )
 	junk.drawText()
+	
+ 
+ 	draw.rect( 0, 0, 100, 100, "pink" )
+ 	imgui.printState()
 end
 
 -------------------------------------------------------------------------------
@@ -56,4 +62,19 @@ function love.keypressed( key )
 		end
 		rescale()
 	end
+end
+
+-------------------------------------------------------------------------------
+function love.mousepressed( x, y, button )
+	imgui.mousepressed( x, y, button )
+end
+
+-------------------------------------------------------------------------------
+function love.mousereleased( x, y, button )
+	imgui.mousereleased( x, y, button )
+end
+
+-------------------------------------------------------------------------------
+function love.mousemoved( x, y, dx, dy )
+	imgui.mousemoved( x, y, dx, dy )
 end

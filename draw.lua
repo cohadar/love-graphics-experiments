@@ -5,6 +5,12 @@ local conf = require "conf"
 local rgb = require "rgb"
 
 -------------------------------------------------------------------------------
+_fontCache = {}
+
+-------------------------------------------------------------------------------
+draw.print = love.graphics.print
+
+-------------------------------------------------------------------------------
 function draw.color( name )
 	local color = rgb[ name ]
 	if color then
@@ -41,6 +47,22 @@ function draw.alignOffset( box_width, text_width, align )
 		return ( box_width - text_width ) / 2
 	else
 		error( "unsupported align mode:" .. align )
+	end
+end
+
+-------------------------------------------------------------------------------
+function draw.rect( x, y, width, height, color )
+	draw.color( color )
+	love.graphics.rectangle( "fill", x, y, width, height )
+end
+
+-------------------------------------------------------------------------------
+function draw.fontSize( size )
+	if _fontCache[ size ] then
+		love.graphics.setFont( _fontCache[ size ] ) 
+	else
+		local font = love.graphics.setNewFont( size ) 
+		_fontCache[ size ] = font
 	end
 end
 
