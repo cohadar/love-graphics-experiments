@@ -34,13 +34,12 @@ end
 -------------------------------------------------------------------------------
 function love.draw()
 	love.graphics.scale( conf.SCALE_GRAPHICS )
-	love.graphics.translate( OFFSET_X, OFFSET_Y )
+	--love.graphics.translate( OFFSET_X, OFFSET_Y )
 	draw.fontSize( 50 )
 	junk.drawText()
 	
  
- 	draw.rect( 0, 0, 100, 100, "pink" )
- 	imgui.printState()
+ 	imgui.printState( 100, 100 )
 end
 
 -------------------------------------------------------------------------------

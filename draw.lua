@@ -11,10 +11,10 @@ _fontCache = {}
 draw.print = love.graphics.print
 
 -------------------------------------------------------------------------------
-function draw.color( name )
+function draw.color( name, alpha )
 	local color = rgb[ name ]
 	if color then
-		love.graphics.setColor( color.r, color.g, color.b )
+		love.graphics.setColor( color.r, color.g, color.b, alpha )
 	else
 		error( "bad color name: " .. name )
 	end
@@ -51,8 +51,8 @@ function draw.alignOffset( box_width, text_width, align )
 end
 
 -------------------------------------------------------------------------------
-function draw.rect( x, y, width, height, color )
-	draw.color( color )
+function draw.rect( x, y, width, height, color, alpha )
+	draw.color( color, alpha )
 	love.graphics.rectangle( "fill", x, y, width, height )
 end
 
