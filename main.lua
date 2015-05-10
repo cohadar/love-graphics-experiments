@@ -8,6 +8,7 @@ local gui = require "gui"
 local utils = require "utils"
 local junk = require "junk"
 local draw = require "draw"
+local text = require "text"
 
 local OFFSET_X = 50
 local OFFSET_Y = 50
@@ -38,15 +39,20 @@ function love.draw()
 	draw.fontSize( 50 )
 	junk.drawText()
 	
-	imgui.printState( 10, 180 )
+	imgui.prepare()
 
 	if imgui.button( 200, 150 ) then
+		text.print(" a ")
 	end
  
  	if imgui.button( 200, 200 ) then
+ 		text.print(" b ")
 	end
 
- 	imgui.afterDraw()
+	imgui.printState( 10, 180 )
+ 	imgui.finish()
+
+ 	text.draw()
 end
 
 -------------------------------------------------------------------------------

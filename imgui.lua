@@ -38,9 +38,17 @@ local function nextId()
 end
 
 -------------------------------------------------------------------------------
-local function after()
+function imgui.prepare()
+	uistate.hotitem = 0
+	uistate.lastid = 0
+end
+
+-------------------------------------------------------------------------------
+function imgui.finish()
 	if uistate.mousedown == false then
 		uistate.activeitem = 0
+	elseif uistate.activeitem == false then
+		uistate.activeitem = -1
 	end
 end
 
@@ -60,9 +68,13 @@ function imgui.button( x, y )
 	end
 	if uistate.activeitem == id then
 		draw.rect( x+10, y+10, 64-20, 48-20, "cyan" )
-		--draw.border( x+1, y+1, 64+1, 48+1, "cyan" )
 	end
-	after()
+	if uistate.mousedown == false and
+		uistate.hotitem == id and 
+		uistate.activeitem == id then
+		return true
+	end
+	return false
 end
 
 -------------------------------------------------------------------------------
