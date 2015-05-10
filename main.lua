@@ -37,8 +37,8 @@ function sortByS( a, b )
 end
 
 -------------------------------------------------------------------------------
-function sortByL( a, b )
-	return a.l < b.l
+function sortByV( a, b )
+	return a.v < b.v
 end
 
 -------------------------------------------------------------------------------
@@ -65,14 +65,14 @@ function love.load()
 	--Font = love.graphics.getFont( 20 )
 	--Font:setLineHeight( 0.6 )
 	love.graphics.setFont( Font )
-	--rescale()
+	rescale()
 
 	local maxname = 0
 
 	local count = 0
 	for name, v in pairs( rgb ) do 
-		v.h, v.s, v.l  = rgbToHsl( v.r, v.g, v.b, 255 )
-		v.v = v.v or 0
+		v.h, v.s, v.v  = rgbToHsv( v.r, v.g, v.b, 255 )
+		v.s = v.s or 0
 		v.name = name
 		table.insert( arr, v )
 		count = count + 1
@@ -81,10 +81,11 @@ function love.load()
 		end
 	end
 	--print("maxname", maxname)  -----------------##################################
-	table.sort( arr, sortByL )
+	table.sort( arr, sortByH )
 	for i = 0, 12 do 
-		sortsub( arr, i*73, sortByH )
+		sortsub( arr, i*73, sortByS )
 	end
+	SCREENSHOT = "hsv_sortedby_h_than_s.png"
 
 	arrT = {}
 	for i = 0, 12 do
@@ -119,7 +120,7 @@ end
 
 -------------------------------------------------------------------------------
 function love.draw()
-	-- love.graphics.scale( conf.SCALE_GRAPHICS )
+	love.graphics.scale( conf.SCALE_GRAPHICS )
 	-- --love.graphics.translate( OFFSET_X, OFFSET_Y )
 
 	-- draw.fontSize( 50 )
@@ -139,18 +140,18 @@ function love.draw()
 
  -- 	text.draw()
 
- 	local BLOCK = 16
+ 	local BLOCK = 8
  	local ix, iy = 0, 0
  	for i, v in ipairs( arr ) do
 
- 		draw.rect( ix * 240, iy * BLOCK, 240, BLOCK, v.name )
+ 		draw.rect( ix * 8 * 6, iy * BLOCK, 8 * 6, BLOCK, v.name )
  		if v.r + v.g + v.b < 128 * 3 then
 	 		draw.color "white"
 	 	else
 	 		draw.color "black"
 	 	end
 	 	local hex = string.format( "%02X%02X%02X", v.r, v.g, v.b )
- 		draw.print( hex .. " - " .. v.name, ix * 240 + 2, iy * BLOCK )
+ 		--draw.print( hex .. " - " .. v.name, ix * 240 + 2, iy * BLOCK )
 
  		iy = iy + 1
  		if iy > 72 then
@@ -180,7 +181,7 @@ function love.keypressed( key )
 		rescale()
 	elseif key == "p" then
 		imageData = love.graphics.newScreenshot( )
-		imageData:encode( "screenshot.png", "png" )
+		imageData:encode( SCREENSHOT, "png" )
 	end
 end
 
