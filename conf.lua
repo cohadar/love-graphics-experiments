@@ -1,8 +1,13 @@
 --- @module conf
 local conf = {}
 
-conf.SCREEN_WIDTH = 400
-conf.SCREEN_HEIGHT = 300
+local rgb = require "rgb"
+
+-- 13 • 73
+-- 1920×1080
+
+conf.SCREEN_WIDTH = 240 * 13--150
+conf.SCREEN_HEIGHT = 16 * 949 / 13
 conf.SCALE_GRAPHICS = 1.0 
 
 -------------------------------------------------------------------------------
