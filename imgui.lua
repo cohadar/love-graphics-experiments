@@ -4,13 +4,66 @@ local imgui = {}
 local draw = require "draw"
 
 -------------------------------------------------------------------------------
-local state = {
-	mouse_x = 0,
-	mouse_y = 0,
-	mouse_down = false,
-	hot_item_id = 0,
-	active_item_id = 0
+local uistate = {
+	mousex = 0,
+	mousey = 0,
+	mousedown = false,
+	hotitem = 0,
+	activeitem = 0,
+	lastid = 0
 }
+
+-------------------------------------------------------------------------------
+-- Check whether current mouse position is within a rectangle
+-------------------------------------------------------------------------------
+local function regionhit( x, y, w, h )
+	if uistate.mousex < x or uistate.mousey < y then
+		return false
+	end
+	if uistate.mousex >= x + w or uistate.mousey >= y + h then
+		return false
+	end
+	return true
+end
+
+-------------------------------------------------------------------------------
+function imgui.afterDraw()
+	uistate.lastid = 0
+end
+
+-------------------------------------------------------------------------------
+local function nextId()
+	uistate.lastid = uistate.lastid + 1
+	return uistate.lastid
+end
+
+-------------------------------------------------------------------------------
+local function after()
+	if uistate.mousedown == false then
+		uistate.activeitem = 0
+	end
+end
+
+-------------------------------------------------------------------------------
+function imgui.button( x, y )
+	local id = nextId()
+	if regionhit( x, y, 64, 48 ) then
+		uistate.hotitem = id
+		if uistate.mousedown and uistate.activeitem == 0 then
+      		uistate.activeitem = id
+      	end
+	end
+	if uistate.hotitem == id then
+		draw.rect( x, y, 64, 48, "light blue" )
+	else
+		draw.rect( x, y, 64, 48, "blue" )
+	end
+	if uistate.activeitem == id then
+		draw.rect( x+10, y+10, 64-20, 48-20, "cyan" )
+		--draw.border( x+1, y+1, 64+1, 48+1, "cyan" )
+	end
+	after()
+end
 
 -------------------------------------------------------------------------------
 function imgui.printState( x, y )
@@ -20,32 +73,33 @@ function imgui.printState( x, y )
 	function p( x, y, name, value )
 		draw.print( name .. " = " .. tostring( value ) , x, y )
 	end
-	p( x, y + 10, "mouse_x"       , state.mouse_x )
-	p( x, y + 30, "mouse_y"       , state.mouse_y )
-	p( x, y + 50, "mouse_down"    , state.mouse_down )
-	p( x, y + 70, "hot_item_id"   , state.hot_item_id )
-	p( x, y + 90, "active_item_id", state.active_item_id )
+	p( x, y + 10, "mousex"    , uistate.mousex )
+	p( x, y + 30, "mousey"    , uistate.mousey )
+	p( x, y + 50, "mousedown" , uistate.mousedown )
+	p( x, y + 70, "hotitem"   , uistate.hotitem )
+	p( x, y + 90, "activeitem", uistate.activeitem )
 end
 
 
 -------------------------------------------------------------------------------
 function imgui.mousepressed( x, y, button )
-	state.mouse_x = x
-	state.mouse_y = y
-	state.mouse_down = true
+	uistate.mousex = x
+	uistate.mousey = y
+	uistate.mousedown = true
 end
 
 -------------------------------------------------------------------------------
 function imgui.mousereleased( x, y, button )
-	state.mouse_x = x
-	state.mouse_y = y
-	state.mouse_down = false
+	uistate.mousex = x
+	uistate.mousey = y
+	uistate.mousedown = false
 end
 
 -------------------------------------------------------------------------------
 function imgui.mousemoved( x, y, dx, dy )
-	state.mouse_x = x
-	state.mouse_y = y
+	uistate.mousex = x
+	uistate.mousey = y
+	uistate.hotitem = 0
 end
 
 -------------------------------------------------------------------------------

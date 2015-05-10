@@ -56,6 +56,11 @@ function draw.rect( x, y, width, height, color, alpha )
 	love.graphics.rectangle( "fill", x, y, width, height )
 end
 
+function draw.border( x, y, width, height, color, alpha )
+	draw.color( color, alpha )
+	love.graphics.rectangle( "line", x, y, width, height )
+end
+
 -------------------------------------------------------------------------------
 function draw.fontSize( size )
 	if _fontCache[ size ] then

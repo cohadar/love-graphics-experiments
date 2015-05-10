@@ -38,8 +38,15 @@ function love.draw()
 	draw.fontSize( 50 )
 	junk.drawText()
 	
+	imgui.printState( 10, 180 )
+
+	if imgui.button( 200, 150 ) then
+	end
  
- 	imgui.printState( 100, 100 )
+ 	if imgui.button( 200, 200 ) then
+	end
+
+ 	imgui.afterDraw()
 end
 
 -------------------------------------------------------------------------------
