@@ -9,7 +9,9 @@ local utils = require "utils"
 local junk = require "junk"
 local draw = require "draw"
 local text = require "text"
+local matrix_test = require "matrix_test"
 require "color"
+local hsv = require "hsv"
 
 local OFFSET_X = 50
 local OFFSET_Y = 50
@@ -24,40 +26,6 @@ local function rescale()
 	love.window.setTitle( string.format( "%d x %d, scale=%.2f", conf.SCREEN_WIDTH, conf.SCREEN_HEIGHT, conf.SCALE_GRAPHICS ) )
 end
 
-local arr = {}
-
--------------------------------------------------------------------------------
-function sortByH( a, b )
-	return a.h < b.h
-end
-
--------------------------------------------------------------------------------
-function sortByS( a, b )
-	return a.s < b.s
-end
-
--------------------------------------------------------------------------------
-function sortByV( a, b )
-	return a.v < b.v
-end
-
--------------------------------------------------------------------------------
-function none( a, b )
-	return false
-end
-
-function sortsub( arr, start, sortf )
-	for i = 1, 72 do
-		for j = i, 73 do
-			if sortf( arr[ start + i ], arr[ start + j ] ) then
-				local temp = arr[ start + i ]
-				arr[ start + i ] = arr[ start + j ]
-				arr[ start + j ] = temp
-			end
-		end	
-	end
-end
-
 -------------------------------------------------------------------------------
 function love.load()
 	--Font = love.graphics.newFont( "OpenSans-Regular.ttf", 50 )
@@ -67,98 +35,30 @@ function love.load()
 	love.graphics.setFont( Font )
 	rescale()
 
-	local maxname = 0
+	matrix_test.run()
 
-	local count = 0
-	for name, v in pairs( rgb ) do 
-		v.h, v.s, v.v  = rgbToHsv( v.r, v.g, v.b, 255 )
-		v.s = v.s or 0
-		v.name = name
-		table.insert( arr, v )
-		count = count + 1
-		if string.len(name) > maxname then
-			maxname = string.len(name)
-		end
-	end
-	--print("maxname", maxname)  -----------------##################################
-	table.sort( arr, sortByH )
-	for i = 0, 12 do 
-		sortsub( arr, i*73, sortByS )
-	end
-	SCREENSHOT = "hsv_sortedby_h_than_s.png"
+	hsv.init()
 
-	arrT = {}
-	for i = 0, 12 do
-		for j = 0, 72 do
-			arrT[ j * 13 + i + 1 ] = arr[ i * 73 + j + 1 ] 
-		end
-	end
+	hsv.sort()
 
- 	local BLOCK = 16
- 	local ix, iy = 0, 0
- 	for i, v in ipairs( arrT ) do
- 		if v.r + v.g + v.b < 128 * 3 then
-	 		fgcolor = "FFFFFF"
-	 	else
-	 		fgcolor = "000000"
-	 	end
-	 	local hex = string.format( "%02X%02X%02X", v.r, v.g, v.b )
- 		local text = hex .. "<br/>" .. v.name
- 		local td = string.format('  <td style="color:#%s;background:#%s;">%s</td>', fgcolor, hex, text )
- 		print( td )
+	hsv.printHTML()
+end
 
-
- 		iy = iy + 1
- 		if iy > 12 then
- 			iy = 0
- 			ix = ix + 1
- 			print("</tr>")
-  			print("<tr>")
- 		end
- 	end	
+-------------------------------------------------------------------------------
+local BLOCK_W = 8 * 6
+local BLOCK_H = 8
+function drawColorSquare( ix, iy, value )
+	draw.rect( ix * BLOCK_W, iy * BLOCK_H, BLOCK_W, BLOCK_H, value )
 end
 
 -------------------------------------------------------------------------------
 function love.draw()
 	love.graphics.scale( conf.SCALE_GRAPHICS )
-	-- --love.graphics.translate( OFFSET_X, OFFSET_Y )
-
-	-- draw.fontSize( 50 )
-	-- junk.drawText()
-	-- imgui.prepare()
-
-	-- if imgui.button( 200, 150 ) then
-	-- 	text.print(" a ")
-	-- end
- 
- -- 	if imgui.button( 200, 200 ) then
- -- 		text.print(" b ")
-	-- end
-
-	-- imgui.printState( 10, 180 )
- -- 	imgui.finish()
-
- -- 	text.draw()
-
- 	local BLOCK = 8
- 	local ix, iy = 0, 0
- 	for i, v in ipairs( arr ) do
-
- 		draw.rect( ix * 8 * 6, iy * BLOCK, 8 * 6, BLOCK, v.name )
- 		if v.r + v.g + v.b < 128 * 3 then
-	 		draw.color "white"
-	 	else
-	 		draw.color "black"
-	 	end
-	 	local hex = string.format( "%02X%02X%02X", v.r, v.g, v.b )
- 		--draw.print( hex .. " - " .. v.name, ix * 240 + 2, iy * BLOCK )
-
- 		iy = iy + 1
- 		if iy > 72 then
- 			iy = 0
- 			ix = ix + 1
- 		end
- 	end
+	for y = 1, 73 do
+		for x = 1, 13 do 
+			drawColorSquare( x-1, y-1, hsv.getColorName( x, y ) )
+		end	
+	end	
 end
 
 -------------------------------------------------------------------------------

@@ -3,12 +3,12 @@ local conf = {}
 
 local rgb = require "rgb"
 
--- 13 • 73
--- 1920×1080
+-- 949 == 13 • 73
+-- 949 == 2*13*14 +  3*13*15
 
 conf.SCREEN_WIDTH = 8 * 6 * 13--150
 conf.SCREEN_HEIGHT = 8 * 73
-conf.SCALE_GRAPHICS = 0.5
+conf.SCALE_GRAPHICS = 1
 
 -------------------------------------------------------------------------------
 function love.conf(t)
