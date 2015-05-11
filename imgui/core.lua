@@ -1,6 +1,8 @@
---- @module imgui
-local imgui = {}
-
+--- @module core
+-------------------------------------------------------------------------------
+-- private methods used by other imgui modules
+-------------------------------------------------------------------------------
+local core = {}
 local draw = require "draw"
 
 -------------------------------------------------------------------------------
@@ -16,7 +18,7 @@ local uistate = {
 -------------------------------------------------------------------------------
 -- Check whether current mouse position is within a rectangle
 -------------------------------------------------------------------------------
-local function regionhit( x, y, w, h )
+function core.regionhit( x, y, w, h )
 	if uistate.mousex < x or uistate.mousey < y then
 		return false
 	end
@@ -27,43 +29,17 @@ local function regionhit( x, y, w, h )
 end
 
 -------------------------------------------------------------------------------
-local function nextId()
-	uistate.lastid = uistate.lastid + 1
-	return uistate.lastid
-end
-
--------------------------------------------------------------------------------
-function imgui.prepare()
-	uistate.hotitem = 0
-	uistate.lastid = 0
-end
-
--------------------------------------------------------------------------------
-function imgui.finish()
-	if uistate.mousedown == false then
-		uistate.activeitem = 0
-	elseif uistate.activeitem == false then
-		uistate.activeitem = -1
-	end
-end
-
--------------------------------------------------------------------------------
-function imgui.button( x, y )
-	local id = nextId()
-	if regionhit( x, y, 64, 48 ) then
+function core.checkRegion( id, x, y, w, h )
+	if core.regionhit( x, y, w, h ) then
 		uistate.hotitem = id
 		if uistate.mousedown and uistate.activeitem == 0 then
-      		uistate.activeitem = id
-      	end
+	  		uistate.activeitem = id
+	  	end
 	end
-	if uistate.hotitem == id then
-		draw.rect( x, y, 64, 48, "light blue" )
-	else
-		draw.rect( x, y, 64, 48, "blue" )
-	end
-	if uistate.activeitem == id then
-		draw.rect( x+10, y+10, 64-20, 48-20, "cyan" )
-	end
+end 
+
+-------------------------------------------------------------------------------
+function core.mouseReleasedOn( id )
 	if uistate.mousedown == false and
 		uistate.hotitem == id and 
 		uistate.activeitem == id then
@@ -73,7 +49,38 @@ function imgui.button( x, y )
 end
 
 -------------------------------------------------------------------------------
-function imgui.printState( x, y )
+function core.isHot( id )
+	return uistate.hotitem == id
+end
+
+-------------------------------------------------------------------------------
+function core.isActive( id )
+	return uistate.activeitem == id
+end
+
+-------------------------------------------------------------------------------
+function core.nextId()
+	uistate.lastid = uistate.lastid + 1
+	return uistate.lastid
+end
+
+-------------------------------------------------------------------------------
+function core.prepare()
+	uistate.hotitem = 0
+	uistate.lastid = 0
+end
+
+-------------------------------------------------------------------------------
+function core.finish()
+	if uistate.mousedown == false then
+		uistate.activeitem = 0
+	elseif uistate.activeitem == false then
+		uistate.activeitem = -1
+	end
+end
+
+-------------------------------------------------------------------------------
+function core.printState( x, y )
 	draw.fontSize( 12 )
 	draw.rect( x - 5, y, 140, 120, "brown", 0x80 )
 	draw.color "white"
@@ -89,25 +96,25 @@ end
 
 
 -------------------------------------------------------------------------------
-function imgui.mousepressed( x, y, button )
+function core.mousepressed( x, y, button )
 	uistate.mousex = x
 	uistate.mousey = y
 	uistate.mousedown = true
 end
 
 -------------------------------------------------------------------------------
-function imgui.mousereleased( x, y, button )
+function core.mousereleased( x, y, button )
 	uistate.mousex = x
 	uistate.mousey = y
 	uistate.mousedown = false
 end
 
 -------------------------------------------------------------------------------
-function imgui.mousemoved( x, y, dx, dy )
+function core.mousemoved( x, y, dx, dy )
 	uistate.mousex = x
 	uistate.mousey = y
 	uistate.hotitem = 0
 end
 
 -------------------------------------------------------------------------------
-return imgui
+return core
