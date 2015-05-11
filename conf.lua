@@ -8,7 +8,7 @@ local rgb = require "rgb"
 
 conf.SCREEN_WIDTH = 8 * 6 * 13--150
 conf.SCREEN_HEIGHT = 8 * 73
-conf.SCALE_GRAPHICS = 1
+conf.SCALE_GRAPHICS = 0.5
 
 -------------------------------------------------------------------------------
 function love.conf(t)

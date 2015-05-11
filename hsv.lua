@@ -30,9 +30,7 @@ local function none( a, b )
 end
 
 -------------------------------------------------------------------------------
-local sortsub_start = 0
-local function sortsub( arr, length, sortf )
-	local start = sortsub_start
+local function sortsub( arr, start, length, sortf )
 	for i = 0, length - 2 do
 		for j = i + 1, length - 1 do
 			if sortf( arr[ start + i ], arr[ start + j ] ) then
@@ -42,16 +40,15 @@ local function sortsub( arr, length, sortf )
 			end
 		end	
 	end
-	sortsub_start = sortsub_start + length
 end
 
 -------------------------------------------------------------------------------
 local regions = {}
-regions[ 1 ] = 14
-regions[ 2 ] = 15
-regions[ 3 ] = 15
-regions[ 4 ] = 15
-regions[ 5 ] = 14
+regions[ 1 ] = { height = 14 }
+regions[ 2 ] = { height = 15 }
+regions[ 3 ] = { height = 15 }
+regions[ 4 ] = { height = 15 }
+regions[ 5 ] = { height = 14 }
 
 -------------------------------------------------------------------------------
 function hsv.init()
@@ -61,6 +58,13 @@ function hsv.init()
 		v.name = name
 		table.insert( matrix, v )
 	end	
+
+	local cumul = 1
+	for i, v in ipairs( regions ) do
+		regions[ i ].length = regions[ i ].height * 13
+		regions[ i ].start = cumul
+		cumul = cumul + regions[ i ].length
+	end
 end	
 
 -------------------------------------------------------------------------------
@@ -97,7 +101,7 @@ end
 
 -------------------------------------------------------------------------------
 local function manual()
-	local by = "svh"
+	local by = "shv"
 	local a = string.sub( by, 1, 1 )
 	local b = string.sub( by, 2, 2 )
 	local c = string.sub( by, 3, 3 ) 
@@ -109,19 +113,52 @@ end
 function hsv.sort()
 	local a, b, c = manual()
 
-	table.sort( matrix, sortBy[ a ] )
-
-	sortsub_start = 1
-	for _, reg in ipairs( regions ) do
-		sortsub( matrix, 13*reg, sortBy[ b ] )
+	temp = {}
+	for _, v in ipairs( matrix ) do
+		table.insert( temp, v )
 	end
 
-	sortsub_start = 1
+	table.sort( temp, sortBy[ a ] )
+
 	for _, reg in ipairs( regions ) do
-		for i = 1, 13 do 
-			sortsub( matrix, reg, sortBy[ c ] )
+		sortsub( temp, reg.start, reg.length, sortBy[ b ] )
+	end
+
+	local start = 1
+	for _, reg in ipairs( regions ) do
+		for x = 1, 13 do 
+			sortsub( temp, start, reg.height, sortBy[ c ] )
+			start = start + reg.height
 		end
-	end	
+	end
+
+	matrix = {}
+	local i = 1
+	local acc_y = 0
+	for _, reg in ipairs( regions ) do
+		for x = 1, 13 do
+		for y = 1, reg.height do
+			matrix[ index( x, y + acc_y ) ] = temp[ i ]  
+			i = i + 1
+		end
+		end
+		acc_y = acc_y + reg.height
+	end
+
+
+	--matrix = temp
+	-- matrix = {}
+	-- local i = 1
+	-- local cumul_y = 0
+	-- for _, reg in ipairs( regions ) do
+	-- 	for x = 1, 13 do 
+	-- 		for y = 1, reg.height do
+	-- 			matrix[ index( x, y + cumul_y ) ] = temp[ i ]
+	-- 			i = i + 1
+	-- 		end 
+	-- 		cumul_y = cumul_y + reg.height
+	-- 	end
+	-- end
 end
 
 
