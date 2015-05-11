@@ -27,11 +27,6 @@ local function regionhit( x, y, w, h )
 end
 
 -------------------------------------------------------------------------------
-function imgui.afterDraw()
-	uistate.lastid = 0
-end
-
--------------------------------------------------------------------------------
 local function nextId()
 	uistate.lastid = uistate.lastid + 1
 	return uistate.lastid

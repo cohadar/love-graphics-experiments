@@ -9,9 +9,6 @@ local utils = require "utils"
 local junk = require "junk"
 local draw = require "draw"
 local text = require "text"
-local matrix_test = require "matrix_test"
-require "color"
-local hsv = require "hsv"
 
 local OFFSET_X = 50
 local OFFSET_Y = 50
@@ -29,36 +26,23 @@ end
 -------------------------------------------------------------------------------
 function love.load()
 	--Font = love.graphics.newFont( "OpenSans-Regular.ttf", 50 )
-	Font = love.graphics.newFont( "Inconsolata.otf", 16 )
+	Font = love.graphics.newFont( "Inconsolata.otf", 50 )
 	--Font = love.graphics.getFont( 20 )
 	--Font:setLineHeight( 0.6 )
 	love.graphics.setFont( Font )
 	rescale()
-
-	matrix_test.run()
-
-	hsv.init()
-
-	hsv.sort()
-
-	hsv.printHTML()
-end
-
--------------------------------------------------------------------------------
-local BLOCK_W = 8 * 6
-local BLOCK_H = 8
-function drawColorSquare( ix, iy, value )
-	draw.rect( ix * BLOCK_W, iy * BLOCK_H, BLOCK_W, BLOCK_H, value )
 end
 
 -------------------------------------------------------------------------------
 function love.draw()
 	love.graphics.scale( conf.SCALE_GRAPHICS )
-	for y = 1, 73 do
-		for x = 1, 13 do 
-			drawColorSquare( x-1, y-1, hsv.getColorName( x, y ) )
-		end	
-	end	
+	junk.drawText()
+
+	imgui.prepare()
+
+	gui.draw()
+
+	imgui.finish()
 end
 
 -------------------------------------------------------------------------------
