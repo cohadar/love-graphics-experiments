@@ -94,7 +94,6 @@ function core.printState( x, y )
 	p( x, y + 90, "activeitem", uistate.activeitem )
 end
 
-
 -------------------------------------------------------------------------------
 function core.mousepressed( x, y, button )
 	uistate.mousex = x

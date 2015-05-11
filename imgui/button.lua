@@ -2,7 +2,7 @@
 
 local BASE = (...):match("(.-)[^%.]+$")
 local core = require( BASE .. "core" )
-local draw = require "draw"
+local style = require( BASE .. "style" )
 
 -------------------------------------------------------------------------------
 button = function( x, y )
@@ -10,14 +10,8 @@ button = function( x, y )
 
 	core.checkRegion( id, x, y, 64, 48 )
 
-	if core.isHot( id ) then
-		draw.rect( x, y, 64, 48, "light blue" )
-	else
-		draw.rect( x, y, 64, 48, "blue" )
-	end
-	if core.isActive( id ) then
-		draw.rect( x+10, y+10, 64-20, 48-20, "cyan" )
-	end
+	style.drawButton( x, y, 64, 48, core.isHot( id ), core.isActive( id ) )
+
 	return core.mouseReleasedOn( id )
 end
 
