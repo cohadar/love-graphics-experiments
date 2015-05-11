@@ -22,6 +22,9 @@ local function sortByV( a, b )
 end
 
 -------------------------------------------------------------------------------
+local sortBy = { h = sortByH, s = sortByS, v = sortByV }
+
+-------------------------------------------------------------------------------
 local function none( a, b )
 	return false
 end
@@ -94,25 +97,29 @@ end
 
 -------------------------------------------------------------------------------
 local function manual()
-	SCREENSHOT = "hsv_sortedby_s_than_v_than_h.png"	
-	return sortByS, sortByV, sortByH
+	local by = "svh"
+	local a = string.sub( by, 1, 1 )
+	local b = string.sub( by, 2, 2 )
+	local c = string.sub( by, 3, 3 ) 
+	SCREENSHOT = "hsv_sortedby_"..a.."_than_"..b.."_than_"..c..".png"	
+	return a, b, c
 end
 
 -------------------------------------------------------------------------------
 function hsv.sort()
-	local sort1, sort2, sort3 = manual()
+	local a, b, c = manual()
 
-	table.sort( matrix, sort1 )
+	table.sort( matrix, sortBy[ a ] )
 
 	sortsub_start = 1
 	for _, reg in ipairs( regions ) do
-		sortsub( matrix, 13*reg, sort2 )
+		sortsub( matrix, 13*reg, sortBy[ b ] )
 	end
 
 	sortsub_start = 1
 	for _, reg in ipairs( regions ) do
 		for i = 1, 13 do 
-			sortsub( matrix, reg, sort3 )
+			sortsub( matrix, reg, sortBy[ c ] )
 		end
 	end	
 end
