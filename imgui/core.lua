@@ -74,7 +74,7 @@ end
 function core.finish()
 	if uistate.mousedown == false then
 		uistate.activeitem = 0
-	elseif uistate.activeitem == false then
+	elseif uistate.activeitem == 0 then
 		uistate.activeitem = -1
 	end
 end
@@ -82,10 +82,10 @@ end
 -------------------------------------------------------------------------------
 function core.printState( x, y )
 	draw.setDefaultFont( 12 )
-	draw.rect( x - 5, y, 140, 120, "brown", 0x80 )
+	draw.rect( x, y, 140, 120, "brown", 0x80 )
 	draw.color "white"
 	function p( x, y, name, value )
-		draw.print( name .. " = " .. tostring( value ) , x, y )
+		draw.print( name .. " = " .. tostring( value ) , x + 5, y )
 	end
 	p( x, y + 10, "mousex"    , uistate.mousex )
 	p( x, y + 30, "mousey"    , uistate.mousey )
@@ -98,21 +98,24 @@ end
 function core.mousepressed( x, y, button )
 	uistate.mousex = x
 	uistate.mousey = y
-	uistate.mousedown = true
+	if button == 'l' then
+		uistate.mousedown = true
+	end
 end
 
 -------------------------------------------------------------------------------
 function core.mousereleased( x, y, button )
 	uistate.mousex = x
 	uistate.mousey = y
-	uistate.mousedown = false
+	if button == 'l' then
+		uistate.mousedown = false
+	end
 end
 
 -------------------------------------------------------------------------------
 function core.mousemoved( x, y, dx, dy )
 	uistate.mousex = x
 	uistate.mousey = y
-	uistate.hotitem = 0
 end
 
 -------------------------------------------------------------------------------

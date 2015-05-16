@@ -50,6 +50,7 @@ function love.draw()
 
 	font.set( "default", 24 )
 	love.graphics.print( "The Quick Brown Fox Jumps Over a Lazy Dog.", 100, 100 )
+	text.draw()
 end
 
 -------------------------------------------------------------------------------
