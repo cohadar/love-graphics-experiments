@@ -81,7 +81,7 @@ end
 
 -------------------------------------------------------------------------------
 function core.printState( x, y )
-	draw.fontSize( 12 )
+	draw.setDefaultFont( 12 )
 	draw.rect( x - 5, y, 140, 120, "brown", 0x80 )
 	draw.color "white"
 	function p( x, y, name, value )

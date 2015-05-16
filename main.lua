@@ -33,7 +33,7 @@ end
 
 -------------------------------------------------------------------------------
 function love.load()
-	font.declare( "default", "fonts/apache/opensans/OpenSans-Bold.ttf" )
+	font.declare( "default", "fonts/apache/opensans/OpenSans-Regular.ttf", 14 )
 	font.set( "default" )
 end
 
@@ -47,6 +47,9 @@ function love.draw()
 	gui.draw()
 
 	imgui.finish()
+
+	font.set( "default", 24 )
+	love.graphics.print( "The Quick Brown Fox Jumps Over a Lazy Dog.", 100, 100 )
 end
 
 -------------------------------------------------------------------------------

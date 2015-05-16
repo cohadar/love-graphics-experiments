@@ -63,8 +63,8 @@ function draw.border( x, y, width, height, color, alpha )
 end
 
 -------------------------------------------------------------------------------
-function draw.fontSize( size )
-	font.set( "default", size )
+function draw.setDefaultFont( optional_size )
+	font.set( "default", optional_size )
 end
 
 -------------------------------------------------------------------------------
