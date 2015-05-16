@@ -3,6 +3,7 @@
 local BASE = (...):match("(.-)[^%.]+$")
 local core = require( BASE .. "core" )
 local style = require( BASE .. "style" )
+local FPS = 60
 
 -------------------------------------------------------------------------------
 slider = function( x, y, width, height, size, value )
@@ -37,6 +38,13 @@ slider = function( x, y, width, height, size, value )
       		return true, value
    		end
    	end
+   	value = value + core.wheel( id )
+   	if value < 0 then
+   		value = 0
+   	end
+   	if value > size - 1 then
+   		value = size - 1
+    end
    	return false, value
 end
 

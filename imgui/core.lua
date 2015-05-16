@@ -10,10 +10,16 @@ local uistate = {
 	mousex = 0,
 	mousey = 0,
 	mousedown = false,
+	mousewheel = 0,
+	mousewheel_acc = 0,
 	hotitem = 0,
 	activeitem = 0,
-	lastid = 0
 }
+
+-------------------------------------------------------------------------------
+local _lastid = 0
+local _tick = 0
+local FPS = 60
 
 -------------------------------------------------------------------------------
 -- Check whether current mouse position is within a rectangle
@@ -59,20 +65,32 @@ function core.isActive( id )
 end
 
 -------------------------------------------------------------------------------
+function core.wheel( id )
+	if uistate.hotitem == id then
+		return uistate.mousewheel
+	end
+	return 0
+end
+
+-------------------------------------------------------------------------------
 function core.getMouseY()
 	return uistate.mousey
 end
 
 -------------------------------------------------------------------------------
 function core.nextId()
-	uistate.lastid = uistate.lastid + 1
-	return uistate.lastid
+	_lastid = _lastid + 1
+	return _lastid
 end
 
 -------------------------------------------------------------------------------
 function core.prepare()
 	uistate.hotitem = 0
-	uistate.lastid = 0
+	_lastid = 0
+	_tick = _tick + 1
+	if _tick > FPS then
+		_tick = 1
+	end
 end
 
 -------------------------------------------------------------------------------
@@ -82,6 +100,15 @@ function core.finish()
 	elseif uistate.activeitem == 0 then
 		uistate.activeitem = -1
 	end
+	uistate.mousewheel = 0
+	if _tick % 10 == 0 then
+		if uistate.mousewheel_acc > 5 then
+			uistate.mousewheel = 1
+		elseif uistate.mousewheel_acc < -5 then
+			uistate.mousewheel = -1
+		end	 
+		uistate.mousewheel_acc = 0
+	end 
 end
 
 -------------------------------------------------------------------------------
@@ -92,11 +119,12 @@ function core.printState( x, y )
 	function p( x, y, name, value )
 		draw.print( name .. " = " .. tostring( value ) , x + 5, y )
 	end
-	p( x, y + 10, "mousex"    , uistate.mousex )
-	p( x, y + 30, "mousey"    , uistate.mousey )
-	p( x, y + 50, "mousedown" , uistate.mousedown )
-	p( x, y + 70, "hotitem"   , uistate.hotitem )
-	p( x, y + 90, "activeitem", uistate.activeitem )
+	p( x, y + 10,  "mousex"     , uistate.mousex )
+	p( x, y + 30,  "mousey"     , uistate.mousey )
+	p( x, y + 50,  "mousedown"  , uistate.mousedown )
+	p( x, y + 70,  "mousewheel_acc" , uistate.mousewheel_acc )
+	p( x, y + 90,  "hotitem"    , uistate.hotitem )
+	p( x, y + 110, "activeitem" , uistate.activeitem )
 end
 
 -------------------------------------------------------------------------------
@@ -105,6 +133,13 @@ function core.mousepressed( x, y, button )
 	uistate.mousey = y
 	if button == 'l' then
 		uistate.mousedown = true
+	end
+	if button == "wu" then
+		uistate.mousewheel = uistate.mousewheel - 1
+		uistate.mousewheel_acc = uistate.mousewheel_acc - 1
+	elseif button == "wd" then
+		uistate.mousewheel = uistate.mousewheel + 1
+		uistate.mousewheel_acc = uistate.mousewheel_acc + 1
 	end
 end
 
