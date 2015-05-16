@@ -59,6 +59,11 @@ function core.isActive( id )
 end
 
 -------------------------------------------------------------------------------
+function core.getMouseY()
+	return uistate.mousey
+end
+
+-------------------------------------------------------------------------------
 function core.nextId()
 	uistate.lastid = uistate.lastid + 1
 	return uistate.lastid

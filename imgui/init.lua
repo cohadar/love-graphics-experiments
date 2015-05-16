@@ -7,6 +7,7 @@ imgui = {}
 
 local core       = require( BASE .. "core" )
 imgui.button     = require( BASE .. "button" )
+imgui.slider     = require( BASE .. "slider" )
 imgui.prepare    = core.prepare
 imgui.finish     = core.finish
 imgui.printState = core.printState
