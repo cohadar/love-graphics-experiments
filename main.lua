@@ -9,28 +9,32 @@ local utils = require "utils"
 local junk = require "junk"
 local draw = require "draw"
 local text = require "text"
+local font = require "font"
 
 local OFFSET_X = 50
 local OFFSET_Y = 50
 
 -------------------------------------------------------------------------------
-local function rescale()
+local function rescale( old_width, old_height )
 	love.window.setMode( 
-		conf.SCREEN_WIDTH * conf.SCALE_GRAPHICS, 
-		conf.SCREEN_HEIGHT * conf.SCALE_GRAPHICS, 
-		{ vsync = true, resizable = false } 
+		old_width * conf.SCALE_GRAPHICS, 
+		old_height * conf.SCALE_GRAPHICS, 
+		{ vsync = true, resizable = true } 
 	)	
-	love.window.setTitle( string.format( "%d x %d, scale=%.2f", conf.SCREEN_WIDTH, conf.SCREEN_HEIGHT, conf.SCALE_GRAPHICS ) )
+	love.resize( love.graphics.getWidth(), love.graphics.getHeight() )
+end
+
+-------------------------------------------------------------------------------
+function love.resize( width, height )
+	width  = math.floor( width / conf.SCALE_GRAPHICS )
+	height = math.floor( height / conf.SCALE_GRAPHICS )
+	love.window.setTitle( string.format( "%d x %d, scale=%.2f", width, height, conf.SCALE_GRAPHICS ) )	
 end
 
 -------------------------------------------------------------------------------
 function love.load()
-	--Font = love.graphics.newFont( "OpenSans-Regular.ttf", 50 )
-	Font = love.graphics.newFont( "Inconsolata.otf", 50 )
-	--Font = love.graphics.getFont( 20 )
-	--Font:setLineHeight( 0.6 )
-	love.graphics.setFont( Font )
-	rescale()
+	font.declare( "default", "fonts/apache/opensans/OpenSans-Bold.ttf" )
+	font.set( "default" )
 end
 
 -------------------------------------------------------------------------------
@@ -50,19 +54,23 @@ function love.keypressed( key )
 	if key == "escape" then
 		love.event.quit()
 	elseif key == "up" or key == "w" then
+		local old_width = love.graphics.getWidth() / conf.SCALE_GRAPHICS
+		local old_height = love.graphics.getHeight() / conf.SCALE_GRAPHICS
 		if conf.SCALE_GRAPHICS < 1 then
 			conf.SCALE_GRAPHICS = conf.SCALE_GRAPHICS * 2
 		else
 			conf.SCALE_GRAPHICS = conf.SCALE_GRAPHICS + 1
 		end
-		rescale()
+		rescale( old_width , old_height )
 	elseif key == "down" or key == "s" then
+		local old_width = love.graphics.getWidth() / conf.SCALE_GRAPHICS
+		local old_height = love.graphics.getHeight() / conf.SCALE_GRAPHICS
 		if conf.SCALE_GRAPHICS > 1 then
 			conf.SCALE_GRAPHICS = conf.SCALE_GRAPHICS - 1
 		else
 			conf.SCALE_GRAPHICS = conf.SCALE_GRAPHICS / 2
 		end
-		rescale()
+		rescale( old_width , old_height )
 	elseif key == "p" then
 		imageData = love.graphics.newScreenshot( )
 		imageData:encode( SCREENSHOT, "png" )

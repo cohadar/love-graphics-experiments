@@ -3,6 +3,7 @@ local draw = {}
 
 local conf = require "conf"
 local rgb = require "rgb"
+local font = require "font"
 
 -------------------------------------------------------------------------------
 _fontCache = {}
@@ -63,12 +64,7 @@ end
 
 -------------------------------------------------------------------------------
 function draw.fontSize( size )
-	if _fontCache[ size ] then
-		love.graphics.setFont( _fontCache[ size ] ) 
-	else
-		local font = love.graphics.setNewFont( size ) 
-		_fontCache[ size ] = font
-	end
+	font.set( "default", size )
 end
 
 -------------------------------------------------------------------------------
