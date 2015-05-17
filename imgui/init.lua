@@ -12,8 +12,15 @@ imgui.prepare    = core.prepare
 imgui.finish     = core.finish
 imgui.printState = core.printState
 imgui.mousemoved = core.mousemoved
-imgui.mousepressed = core.mousepressed
+imgui.mousepressed  = core.mousepressed
 imgui.mousereleased = core.mousereleased
+imgui.keypressed    = core.keypressed
+imgui.keyreleased   = core.keyreleased
+
+-------------------------------------------------------------------------------
+imgui.init = function()
+	love.keyboard.setKeyRepeat( true )
+end
 
 -------------------------------------------------------------------------------
 return imgui

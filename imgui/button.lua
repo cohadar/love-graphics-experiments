@@ -10,9 +10,10 @@ button = function( x, y )
 
 	core.checkRegion( id, x, y, 64, 48 )
 
-	style.drawButton( x, y, 64, 48, core.isHot( id ), core.isActive( id ) )
+	style.drawButton( x, y, 64, 48, core.getMods( id ) )
 
-	return core.mouseReleasedOn( id )
+	-- TODO: set active mod when button used via keyboard
+	return core.keyboardOn( id ) or core.mouseReleasedOn( id )
 end
 
 

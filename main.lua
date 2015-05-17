@@ -35,6 +35,7 @@ end
 function love.load()
 	font.declare( "default", "fonts/apache/opensans/OpenSans-Regular.ttf", 14 )
 	font.set( "default" )
+	imgui.init()
 end
 
 -------------------------------------------------------------------------------
@@ -54,7 +55,7 @@ function love.draw()
 end
 
 -------------------------------------------------------------------------------
-function love.keypressed( key )
+function love.keypressed( key, isrepeat )
 	if key == "escape" then
 		love.event.quit()
 	elseif key == "up" or key == "w" then
@@ -79,6 +80,12 @@ function love.keypressed( key )
 		imageData = love.graphics.newScreenshot( )
 		imageData:encode( SCREENSHOT, "png" )
 	end
+	imgui.keypressed( key, isrepeat )
+end
+
+-------------------------------------------------------------------------------
+function love.keyreleased( key )
+	imgui.keyreleased( key )
 end
 
 -------------------------------------------------------------------------------

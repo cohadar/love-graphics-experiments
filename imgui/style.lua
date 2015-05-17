@@ -19,16 +19,17 @@ local colors = {
 	active_widget = "red",
 	active_border = "yellow",
 	active_text = "light blue",
+	focus_border = "orange",
 }
 
 -------------------------------------------------------------------------------
-function style.drawButton( x, y, w, h, hot, active )
-	if active then
+function style.drawButton( x, y, w, h, mod )
+	if mod.active then
 		draw.color( colors.active_widget )
 		draw.rect( x, y, w, h )
 		draw.color( colors.active_border )
 		draw.border( x, y, w, h )
-	elseif hot then
+	elseif mod.hot then
 		draw.color( colors.hot_widget )
 		draw.rect( x, y, w, h )
 		draw.color( colors.hot_border )
@@ -39,10 +40,15 @@ function style.drawButton( x, y, w, h, hot, active )
 		draw.color( colors.border )
 		draw.border( x, y, w, h )
 	end	
+	if mod.focus then
+		draw.color( colors.focus_border )
+		draw.border( x - 1, y - 1, w + 2, h + 2 )
+		draw.border( x - 2, y - 2, w + 4, h + 4 )
+	end	
 end
 
 -------------------------------------------------------------------------------
-function style.drawSlider( x, y, w, h, hot, active, percent )
+function style.drawSlider( x, y, w, h, mod, percent )
 	assert( percent >= 0 and percent <= 1 )
 	-- calculate draw constants
 	local HEAD_SIZE = w
@@ -51,7 +57,11 @@ function style.drawSlider( x, y, w, h, hot, active, percent )
 	-- draw slider spine
 	draw.color( colors.widget )
 	draw.rect( x, y, SPINE_WIDTH, h )
-	if active or hot then
+	if mod.focus then
+		draw.color( colors.focus_border )
+		draw.border( x - 1, y - 1, SPINE_WIDTH + 2, h + 2 )
+		draw.border( x - 2, y - 2, SPINE_WIDTH + 4, h + 4 )
+	elseif mod.active or mod.hot then
 		draw.color( colors.hot_border )
 		draw.border( x, y, SPINE_WIDTH, h )
 	else
@@ -60,7 +70,7 @@ function style.drawSlider( x, y, w, h, hot, active, percent )
 	end
 	-- draw slider head
 	local dy = ( h - HEAD_SIZE ) * percent
-  	if active or hot then
+  	if mod.active or mod.hot then
   		draw.color( colors.hot_widget )
 		draw.rect( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE )
 	    draw.color( colors.hot_border )
@@ -70,7 +80,7 @@ function style.drawSlider( x, y, w, h, hot, active, percent )
     	draw.rect( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE )
 	    draw.color( colors.border )
     	draw.border( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE )
-    end
+    end   
 end
 
 -------------------------------------------------------------------------------

@@ -12,8 +12,14 @@ local uistate = {
 	mousedown = false,
 	mousewheel = 0,
 	mousewheel_acc = 0,
+
 	hotitem = 0,
 	activeitem = 0,
+	kbditem = 0,
+
+  	keyentered = nil,
+  	keymod = nil,
+  	lastwidget = 0,	
 }
 
 -------------------------------------------------------------------------------
@@ -45,6 +51,27 @@ function core.checkRegion( id, x, y, w, h )
 end 
 
 -------------------------------------------------------------------------------
+function core.keyboardOn( id )
+	if uistate.kbditem == 0 then
+    	uistate.kbditem = id
+    end		
+	if uistate.kbditem == id then
+		if uistate.keyentered == "tab" then
+			uistate.keyentered = 0
+			uistate.kbditem = 0
+			if love.keyboard.isDown( "lshift" ) or love.keyboard.isDown( "rshift" ) then
+				uistate.kbditem = uistate.lastwidget
+			end
+		elseif uistate.keyentered == "return" or uistate.keyentered == " " then
+			uistate.keyentered = 0
+			return true
+		end
+	end
+	uistate.lastwidget = id;
+	return false
+end
+
+-------------------------------------------------------------------------------
 function core.mouseReleasedOn( id )
 	if uistate.mousedown == false and
 		uistate.hotitem == id and 
@@ -55,13 +82,12 @@ function core.mouseReleasedOn( id )
 end
 
 -------------------------------------------------------------------------------
-function core.isHot( id )
-	return uistate.hotitem == id
-end
-
--------------------------------------------------------------------------------
-function core.isActive( id )
-	return uistate.activeitem == id
+function core.getMods( id )
+	return {
+		hot    = ( uistate.hotitem == id ),
+		active = ( uistate.activeitem == id ),
+		focus  = ( uistate.kbditem == id ),
+	}
 end
 
 -------------------------------------------------------------------------------
@@ -113,7 +139,7 @@ end
 function core.printState( x, y )
 	draw.setDefaultFont( 12 )
 	draw.color( "brown", 0x80 )
-	draw.rect( x, y, 140, 120 )
+	draw.rect( x, y, 140, 170 )
 	draw.color( "white" )
 	function p( x, y, name, value )
 		draw.print( name .. " = " .. tostring( value ) , x + 5, y )
@@ -124,6 +150,17 @@ function core.printState( x, y )
 	p( x, y + 70,  "mousewheel_acc" , uistate.mousewheel_acc )
 	p( x, y + 90,  "hotitem"    , uistate.hotitem )
 	p( x, y + 110, "activeitem" , uistate.activeitem )
+	p( x, y + 130, "kbditem"    , uistate.kbditem )
+	p( x, y + 150, "keyentered" , uistate.keyentered )
+end
+
+-------------------------------------------------------------------------------
+function core.keypressed( key, isrepeat )
+	uistate.keyentered = key
+end
+
+-------------------------------------------------------------------------------
+function core.keyreleased( key )
 end
 
 -------------------------------------------------------------------------------
