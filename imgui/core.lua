@@ -102,10 +102,8 @@ function core.finish()
 	end
 	uistate.mousewheel = 0
 	if _tick % 10 == 0 then
-		if uistate.mousewheel_acc > 5 then
-			uistate.mousewheel = 1
-		elseif uistate.mousewheel_acc < -5 then
-			uistate.mousewheel = -1
+		if math.abs( uistate.mousewheel_acc ) > 1 then
+			uistate.mousewheel = uistate.mousewheel_acc
 		end	 
 		uistate.mousewheel_acc = 0
 	end 
@@ -114,8 +112,9 @@ end
 -------------------------------------------------------------------------------
 function core.printState( x, y )
 	draw.setDefaultFont( 12 )
-	draw.rect( x, y, 140, 120, "brown", 0x80 )
-	draw.color "white"
+	draw.color( "brown", 0x80 )
+	draw.rect( x, y, 140, 120 )
+	draw.color( "white" )
 	function p( x, y, name, value )
 		draw.print( name .. " = " .. tostring( value ) , x + 5, y )
 	end

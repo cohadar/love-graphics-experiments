@@ -38,13 +38,20 @@ slider = function( x, y, width, height, size, value )
       		return true, value
    		end
    	end
-   	value = value + core.wheel( id )
-   	if value < 0 then
-   		value = 0
-   	end
-   	if value > size - 1 then
-   		value = size - 1
-    end
+   	local wh = core.wheel( id )
+   	if wh ~= 0 then
+   		if math.abs( wh ) == 1 then
+   			value = value + wh
+   		else
+   			value = value + wh * math.floor( 1 + size * 0.01 )
+   		end
+	   	if value < 0 then
+	   		value = 0
+	   	end
+	   	if value > size - 1 then
+	   		value = size - 1
+	    end
+	end
    	return false, value
 end
 

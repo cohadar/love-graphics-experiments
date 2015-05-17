@@ -53,13 +53,13 @@ end
 
 -------------------------------------------------------------------------------
 function draw.rect( x, y, width, height, color, alpha )
-	draw.color( color, alpha )
+	assert( color == nil )
 	love.graphics.rectangle( "fill", x, y, width, height )
 end
 
 function draw.border( x, y, width, height, color, alpha )
-	draw.color( color, alpha )
-	love.graphics.rectangle( "line", x, y, width, height )
+	assert( color == nil )
+	love.graphics.rectangle( "line", x+0.5, y+0.5, width, height )
 end
 
 -------------------------------------------------------------------------------

@@ -8,14 +8,36 @@ local style = {}
 local draw = require "draw"
 
 -------------------------------------------------------------------------------
+local colors = {
+	background = "light grey",
+	widget = "light royal blue",
+	border = "aqua marine",
+	text = "straw",
+	hot_widget = "primary blue",
+	hot_border = "yellow",
+	hot_text = "pale",
+	active_widget = "red",
+	active_border = "yellow",
+	active_text = "light blue",
+}
+
+-------------------------------------------------------------------------------
 function style.drawButton( x, y, w, h, hot, active )
-	if hot then
-		draw.rect( x, y, w, h, "light blue" )
-	else
-		draw.rect( x, y, w, h, "blue" )
-	end
 	if active then
-		draw.rect( x + 10, y + 10, w - 20, h - 20, "cyan" )
+		draw.color( colors.active_widget )
+		draw.rect( x, y, w, h )
+		draw.color( colors.active_border )
+		draw.border( x, y, w, h )
+	elseif hot then
+		draw.color( colors.hot_widget )
+		draw.rect( x, y, w, h )
+		draw.color( colors.hot_border )
+		draw.border( x, y, w, h )		
+	else
+		draw.color( colors.widget )
+		draw.rect( x, y, w, h )
+		draw.color( colors.border )
+		draw.border( x, y, w, h )
 	end	
 end
 
@@ -27,16 +49,28 @@ function style.drawSlider( x, y, w, h, hot, active, percent )
 	local SPINE_WIDTH = HEAD_SIZE * 3 / 5
 	local HEAD_DX = ( HEAD_SIZE - SPINE_WIDTH ) / 2
 	-- draw slider spine
-	draw.rect( x, y, SPINE_WIDTH, h, "mushroom" )
-	draw.border( x, y, SPINE_WIDTH, h, "off white" )
+	draw.color( colors.widget )
+	draw.rect( x, y, SPINE_WIDTH, h )
+	if active or hot then
+		draw.color( colors.hot_border )
+		draw.border( x, y, SPINE_WIDTH, h )
+	else
+		draw.color( colors.border )
+		draw.border( x, y, SPINE_WIDTH, h )
+	end
 	-- draw slider head
 	local dy = ( h - HEAD_SIZE ) * percent
   	if active or hot then
-		draw.rect( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE, "purple brown" )
+  		draw.color( colors.hot_widget )
+		draw.rect( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE )
+	    draw.color( colors.hot_border )
+    	draw.border( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE )
   	else
-    	draw.rect( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE, "dark taupe" )
+  		draw.color( colors.widget )
+    	draw.rect( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE )
+	    draw.color( colors.border )
+    	draw.border( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE )
     end
-    draw.border( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE, "pale" )
 end
 
 -------------------------------------------------------------------------------
