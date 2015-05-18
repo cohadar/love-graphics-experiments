@@ -63,64 +63,88 @@ local function drawFocus( x, y, w, h )
 end
 
 -------------------------------------------------------------------------------
-function style.drawButton( x, y, w, h, mods )
-	setWidgetColor( mods )
-	draw.rect( x, y, w, h )
-	setBorderColor( mods )
-	draw.border( x, y, w, h )
-	if mods.focus then
-		drawFocus( x, y, w, h )
-	end	
+local function drawFocus2( rect )
+	draw.color( colors.focus_border )
+	draw.border( rect.x - 1, rect.y - 1, rect.w + 2, rect.h + 2 )
+	draw.border( rect.x - 2, rect.y - 2, rect.w + 4, rect.h + 4 )
 end
 
 -------------------------------------------------------------------------------
-function style.drawTextField( x, y, w, h, mods, text )
+function style.drawButton( rect, mods, text )
+	draw.setDefaultFont()
 	setWidgetColor( mods )
-	draw.rect( x, y, w, h )
+	draw.rect2( rect )
 	setBorderColor( mods )
-	draw.border( x, y, w, h )	
+	draw.border2( rect )
 	if mods.focus then
-		drawFocus( x, y, w, h )
+		drawFocus2( rect )
 	end	
 	setTextColor( mods )
-	draw.setInputFont( h - 4 )
+	draw.print( text, rect.x + 4, rect.y + 2 )
+end
+
+-------------------------------------------------------------------------------
+function style.drawDialog( rect, mods, title )
+	draw.setDefaultFont()
+	setWidgetColor( mods )
+	draw.rect2( rect )
+	setBorderColor( mods )
+	draw.border2( rect )
+	if mods.focus then
+		drawFocus2( rect )
+	end	
+	setTextColor( mods )
+	draw.print( title, rect.x + 4, rect.y + 2 )
+end
+
+-------------------------------------------------------------------------------
+function style.drawTextField( rect, mods, text )
+	setWidgetColor( mods )
+	draw.rect2( rect )
+	setBorderColor( mods )
+	draw.border2( rect )	
+	if mods.focus then
+		drawFocus2( rect )
+	end	
+	setTextColor( mods )
+	draw.setInputFont( rect.h - 4 )
 	local char_width = draw.getFontEm()
-	draw.print( text, x + 2, y + 2 )
+	draw.print( text, rect.x + 2, rect.y + 2 )
 	-- render cursor if we have keyboard focus
 	local len = string.len( text )
   	if mods.focus and mods.tick > 30 then
-    	draw.print( "_", x + len * char_width, y )
+    	draw.print( "_", rect.x + len * char_width, rect.y )
     end
 end
 
 -------------------------------------------------------------------------------
-function style.drawSlider( x, y, w, h, mods, percent )
+function style.drawSlider( rect, mods, percent )
 	assert( percent >= 0 and percent <= 1 )
 	-- calculate draw constants
-	local HEAD_SIZE = w
+	local HEAD_SIZE = rect.w
 	local SPINE_WIDTH = HEAD_SIZE * 3 / 5
 	local DX = ( HEAD_SIZE - SPINE_WIDTH ) / 2
 	-- draw slider spine
 	setWidgetColor( mods )
-	draw.rect( x + DX, y, SPINE_WIDTH, h )
+	draw.rect( rect.x + DX, rect.y, SPINE_WIDTH, rect.h )
 	setBorderColor( mods )
-	draw.border( x + DX, y, SPINE_WIDTH, h )
+	draw.border( rect.x + DX, rect.y, SPINE_WIDTH, rect.h )
 	if mods.focus then
-		drawFocus( x + DX, y, SPINE_WIDTH, h )
+		drawFocus( rect.x + DX, rect.y, SPINE_WIDTH, rect.h )
 	end	
 	-- draw slider head
-	local dy = ( h - HEAD_SIZE ) * percent
+	local dy = ( rect.h - HEAD_SIZE ) * percent
 	setWidgetColor( mods )
-	draw.rect( x, y + dy, HEAD_SIZE, HEAD_SIZE )
+	draw.rect( rect.x, rect.y + dy, HEAD_SIZE, HEAD_SIZE )
 	setBorderColor( mods )
-	draw.border( x, y + dy, HEAD_SIZE, HEAD_SIZE )
+	draw.border( rect.x, rect.y + dy, HEAD_SIZE, HEAD_SIZE )
 	if mods.focus then
-		drawFocus( x, y + dy, HEAD_SIZE, HEAD_SIZE )
+		drawFocus( rect.x, rect.y + dy, HEAD_SIZE, HEAD_SIZE )
 	end		
 end
 
 -------------------------------------------------------------------------------
-function style.drawLuaTable( x, y, w, h, mods, luaTable )
+function style.drawLuaTable( rect, mods, luaTable )
 	draw.setDefaultFont()
 	local count = 0
 	local maxlen = 0
@@ -130,18 +154,19 @@ function style.drawLuaTable( x, y, w, h, mods, luaTable )
 		maxlen = math.max( maxlen, lineLen )
 	end		
 	local fontHeight = draw.getFontHeight()
-	w = math.max( w, maxlen + 10 )
-	h = math.max( h, count * fontHeight )
+	rect.w = math.max( rect.w, maxlen + 10 )
+	rect.h = math.max( rect.h, count * fontHeight )
 	setWidgetColor( mods )
-	draw.rect( x, y, w, h )
+	draw.rect2( rect )
 	setBorderColor( mods )
-	draw.border( x, y, w, h )	
+	draw.border2( rect )	
 	setTextColor( mods )
 	function p( x, y, key, value )
 		draw.print( key .. " = " .. tostring( value ) , x + 5, y )
 	end
+	y = rect.y
 	for key, value in pairs( luaTable ) do
-		p( x, y, key, value )
+		p( rect.x, y, key, value )
 		y = y + fontHeight
 	end	
 end

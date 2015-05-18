@@ -81,13 +81,13 @@ local function keyboardOn( id, uistate, value, size )
 end
 
 -------------------------------------------------------------------------------
-slider = function( x, y, width, height, size, value )
+function slider( value, size, rect )
     local id, uistate = core.nextId()
     local percent = getPercentFromValue( value, size )
     value = getValueFromPercent( percent, size )
-    core.checkRegion( id, x, y, width, height )
+    core.checkRect2( id, rect )
     local mod = core.getMods( id )
-    style.drawSlider( x, y, width, height, mod, percent )
+    style.drawSlider( rect, mod, percent )
     -- Update widget value
     local v = keyboardOn( id, uistate, value, size )
     if v ~= value then

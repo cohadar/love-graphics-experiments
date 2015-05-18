@@ -26,13 +26,14 @@ local function mouseReleasedOn( id, uistate )
 end
 
 -------------------------------------------------------------------------------
-luatable = function( x, y, w, h, table )
+function luatable( rect, table )
 	local id, uistate = core.nextId()
 	table = table or uistate
 
-	core.checkRegion( id, x, y, w or 0, h or 0 )
+	rect = { x = rect.x, y = rect.y, w = rect.w or 0, h = rect.h or 0 }
+	core.checkRect2( id, rect )
 
-	style.drawLuaTable( x, y, w or 0, h or 0, core.getMods( id ), table )
+	style.drawLuaTable( rect, core.getMods( id ), table )
 
 	return false
 end

@@ -1,8 +1,17 @@
---- @module button
+--- @module dialog
 
 local BASE = (...):match("(.-)[^%.]+$")
 local core = require( BASE .. "core" )
 local style = require( BASE .. "style" )
+local dialog = {}
+
+-------------------------------------------------------------------------------
+local function push()
+end
+
+-------------------------------------------------------------------------------
+local function pop()
+end
 
 -------------------------------------------------------------------------------
 local function keyboardOn( id, uistate )
@@ -26,16 +35,19 @@ local function mouseReleasedOn( id, uistate )
 end
 
 -------------------------------------------------------------------------------
-function button( text, rect )
+function dialog.start( title, rect )
 	local id, uistate = core.nextId()
 
-	core.checkRect( id, rect.x, rect.y, rect.w, rect.h )
+	style.drawDialog( rect, core.getMods( id ), title )
 
-	style.drawButton( rect, core.getMods( id ), text )
-
-	-- TODO: set active mod when button used via keyboard
-	return keyboardOn( id, uistate ) or mouseReleasedOn( id, uistate )
+	push( rect )
 end
 
 -------------------------------------------------------------------------------
-return button
+function dialog.stop()
+	return pop()
+end
+
+-------------------------------------------------------------------------------
+return dialog
+

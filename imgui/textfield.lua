@@ -30,12 +30,12 @@ local function keyboardOn( id, uistate, buffer )
 end
 
 -------------------------------------------------------------------------------
-textfield = function( x, y, w, h, buffer )
+function textfield( buffer, rect )
 	local id, uistate = core.nextId()
 
-	core.checkRegion( id, x, y, w, h )
+	core.checkRect2( id, rect )
 
-	style.drawTextField( x, y, w, h, core.getMods( id ), buffer )
+	style.drawTextField( rect, core.getMods( id ), buffer )
 
 	if mouseReleasedOn( id, uistate ) then
 		uistate.kbditem = id

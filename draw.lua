@@ -58,9 +58,22 @@ function draw.rect( x, y, width, height, color, alpha )
 	love.graphics.rectangle( "fill", x, y, width, height )
 end
 
+-------------------------------------------------------------------------------
+function draw.rect2( rect )
+	love.graphics.rectangle( "fill", rect.x, rect.y, rect.w, rect.h )
+end
+
+-------------------------------------------------------------------------------
 function draw.border( x, y, width, height, color, alpha )
 	assert( color == nil )
 	love.graphics.rectangle( "line", x+0.5, y+0.5, width, height )
+end
+
+-------------------------------------------------------------------------------
+-- we add 0.5 for pixel centering
+-------------------------------------------------------------------------------
+function draw.border2( rect )
+	love.graphics.rectangle( "line", rect.x + 0.5, rect.y + 0.5, rect.w, rect.h )
 end
 
 -------------------------------------------------------------------------------

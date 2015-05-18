@@ -38,7 +38,7 @@ end
 -------------------------------------------------------------------------------
 -- Check whether current mouse position is within a rectangle
 -------------------------------------------------------------------------------
-local function regionhit( x, y, w, h )
+local function isRectHot( x, y, w, h )
 	if uistate.mousex < x or uistate.mousey < y then
 		return false
 	end
@@ -51,8 +51,20 @@ end
 -------------------------------------------------------------------------------
 -- check if widget is hot and active, call in every ( square ) widget
 -------------------------------------------------------------------------------
-function core.checkRegion( id, x, y, w, h )
-	if regionhit( x, y, w, h ) then
+function core.checkRect( id, x, y, w, h )
+	if isRectHot( x, y, w, h ) then
+		uistate.hotitem = id
+		if uistate.mousedown and uistate.activeitem == 0 then
+	  		uistate.activeitem = id
+	  	end
+	end
+end 
+
+-------------------------------------------------------------------------------
+-- check if widget is hot and active, call in every ( square ) widget
+-------------------------------------------------------------------------------
+function core.checkRect2( id, rect )
+	if isRectHot( rect.x, rect.y, rect.w, rect.h ) then
 		uistate.hotitem = id
 		if uistate.mousedown and uistate.activeitem == 0 then
 	  		uistate.activeitem = id
