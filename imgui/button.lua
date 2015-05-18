@@ -4,25 +4,14 @@ local BASE = (...):match("(.-)[^%.]+$")
 local core = require( BASE .. "core" )
 local style = require( BASE .. "style" )
 
-
 -------------------------------------------------------------------------------
 local function keyboardOn( id, uistate )
-	if uistate.kbditem == 0 then
-    	uistate.kbditem = id
-    end		
-	if uistate.kbditem == id then
-		if uistate.keyentered == "tab" then
-			uistate.keyentered = 0
-			uistate.kbditem = 0
-			if love.keyboard.isDown( "lshift" ) or love.keyboard.isDown( "rshift" ) then
-				uistate.kbditem = uistate.lastwidget
-			end
-		elseif uistate.keyentered == "return" or uistate.keyentered == " " then
+	if core.hasKeyboardFocus( id ) then
+		if uistate.keyentered == "return" or uistate.keyentered == " " then
 			uistate.keyentered = 0
 			return true
 		end
 	end
-	uistate.lastwidget = id;
 	return false
 end
 

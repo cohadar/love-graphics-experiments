@@ -48,7 +48,7 @@ local function regionhit( x, y, w, h )
 end
 
 -------------------------------------------------------------------------------
--- check if widget is hot and active, call in every widget
+-- check if widget is hot and active, call in every ( square ) widget
 -------------------------------------------------------------------------------
 function core.checkRegion( id, x, y, w, h )
 	if regionhit( x, y, w, h ) then
@@ -58,6 +58,26 @@ function core.checkRegion( id, x, y, w, h )
 	  	end
 	end
 end 
+
+-------------------------------------------------------------------------------
+-- handles keyboard focus and tab-cycling
+-------------------------------------------------------------------------------
+function core.hasKeyboardFocus( id )
+	if uistate.kbditem == 0 then
+    	uistate.kbditem = id
+    end		
+	if uistate.kbditem == id then
+		if uistate.keyentered == "tab" then
+			uistate.keyentered = 0
+			uistate.kbditem = 0
+			if love.keyboard.isDown( "lshift" ) or love.keyboard.isDown( "rshift" ) then
+				uistate.kbditem = uistate.lastwidget
+			end
+		end
+	end
+	uistate.lastwidget = id;
+	return uistate.kbditem == id
+end
 
 -------------------------------------------------------------------------------
 -- states passed to stile draw functions
@@ -98,6 +118,13 @@ function core.finish()
 		end	 
 		uistate.mousewheel_acc = 0
 	end 
+
+ 	--If no widget grabbed tab, clear focus
+  	if uistate.keyentered == "tab" then
+    	uistate.kbditem = 0
+    end
+  	--Clear the entered key
+  	uistate.keyentered = 0
 end
 
 -------------------------------------------------------------------------------

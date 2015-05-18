@@ -70,17 +70,8 @@ end
 
 -------------------------------------------------------------------------------
 local function keyboardOn( id, uistate, value, size )
-    if uistate.kbditem == 0 then
-        uistate.kbditem = id
-    end     
-    if uistate.kbditem == id then
-        if uistate.keyentered == "tab" then
-            uistate.keyentered = 0
-            uistate.kbditem = 0
-            if love.keyboard.isDown( "lshift" ) or love.keyboard.isDown( "rshift" ) then
-                uistate.kbditem = uistate.lastwidget
-            end
-        elseif uistate.keyentered == "up" then
+    if core.hasKeyboardFocus( id ) then
+        if uistate.keyentered == "up" then
             uistate.keyentered = 0
             return valueRebound( value - 1, size )
         elseif uistate.keyentered == "down" then
@@ -94,7 +85,6 @@ local function keyboardOn( id, uistate, value, size )
             return valueRebound( value + 5 * math.floor( 1 + size * 0.01 ), size )            
         end
     end
-    uistate.lastwidget = id;
     return value
 end
 
