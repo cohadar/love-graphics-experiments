@@ -18,7 +18,7 @@ local colors = {
 	hot_text = "pale",
 	active_widget = "red",
 	active_border = "yellow",
-	active_text = "light blue",
+	active_text = "black",
 	focus_border = "orange",
 }
 
@@ -45,6 +45,35 @@ function style.drawButton( x, y, w, h, mod )
 		draw.border( x - 1, y - 1, w + 2, h + 2 )
 		draw.border( x - 2, y - 2, w + 4, h + 4 )
 	end	
+end
+
+-------------------------------------------------------------------------------
+function style.drawTextField( x, y, w, h, mod, text )
+	if mod.active then
+		draw.color( colors.active_widget )
+		draw.rect( x, y, w, h )
+		draw.color( colors.active_border )
+		draw.border( x, y, w, h )
+		draw.color( colors.active_text )
+	elseif mod.hot then
+		draw.color( colors.hot_widget )
+		draw.rect( x, y, w, h )
+		draw.color( colors.hot_border )
+		draw.border( x, y, w, h )		
+		draw.color( colors.hot_text )
+	else
+		draw.color( colors.widget )
+		draw.rect( x, y, w, h )
+		draw.color( colors.border )
+		draw.border( x, y, w, h )
+		draw.color( colors.text )
+	end	
+	if mod.focus then
+		draw.color( colors.focus_border )
+		draw.border( x - 1, y - 1, w + 2, h + 2 )
+		draw.border( x - 2, y - 2, w + 4, h + 4 )
+	end	
+	draw.print( text, x + 2, y + 2 )
 end
 
 -------------------------------------------------------------------------------

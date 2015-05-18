@@ -8,6 +8,7 @@ imgui = {}
 local core       = require( BASE .. "core" )
 imgui.button     = require( BASE .. "button" )
 imgui.slider     = require( BASE .. "slider" )
+imgui.textfield  = require( BASE .. "textfield" )
 imgui.prepare    = core.prepare
 imgui.finish     = core.finish
 imgui.printState = core.printState
@@ -16,6 +17,7 @@ imgui.mousepressed  = core.mousepressed
 imgui.mousereleased = core.mousereleased
 imgui.keypressed    = core.keypressed
 imgui.keyreleased   = core.keyreleased
+imgui.textinput     = core.textinput
 
 -------------------------------------------------------------------------------
 imgui.init = function()

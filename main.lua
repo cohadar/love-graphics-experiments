@@ -35,6 +35,7 @@ end
 function love.load()
 	font.declare( "default", "fonts/apache/opensans/OpenSans-Regular.ttf", 14 )
 	font.set( "default" )
+	font.declare( "input", "fonts/ofl/arvo/Arvo-Regular.ttf", 14 )
 	imgui.init()
 end
 
@@ -58,27 +59,6 @@ end
 function love.keypressed( key, isrepeat )
 	if key == "escape" then
 		love.event.quit()
-	elseif key == "w" then
-		local old_width = love.graphics.getWidth() / conf.SCALE_GRAPHICS
-		local old_height = love.graphics.getHeight() / conf.SCALE_GRAPHICS
-		if conf.SCALE_GRAPHICS < 1 then
-			conf.SCALE_GRAPHICS = conf.SCALE_GRAPHICS * 2
-		else
-			conf.SCALE_GRAPHICS = conf.SCALE_GRAPHICS + 1
-		end
-		rescale( old_width , old_height )
-	elseif key == "s" then
-		local old_width = love.graphics.getWidth() / conf.SCALE_GRAPHICS
-		local old_height = love.graphics.getHeight() / conf.SCALE_GRAPHICS
-		if conf.SCALE_GRAPHICS > 1 then
-			conf.SCALE_GRAPHICS = conf.SCALE_GRAPHICS - 1
-		else
-			conf.SCALE_GRAPHICS = conf.SCALE_GRAPHICS / 2
-		end
-		rescale( old_width , old_height )
-	elseif key == "p" then
-		imageData = love.graphics.newScreenshot( )
-		imageData:encode( SCREENSHOT, "png" )
 	end
 	imgui.keypressed( key, isrepeat )
 end
@@ -86,6 +66,11 @@ end
 -------------------------------------------------------------------------------
 function love.keyreleased( key )
 	imgui.keyreleased( key )
+end
+
+-------------------------------------------------------------------------------
+function love.textinput( text )
+	imgui.textinput( text )
 end
 
 -------------------------------------------------------------------------------

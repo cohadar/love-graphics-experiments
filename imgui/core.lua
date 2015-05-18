@@ -119,12 +119,14 @@ function core.finish()
 		uistate.mousewheel_acc = 0
 	end 
 
- 	--If no widget grabbed tab, clear focus
+ 	-- if no widget grabbed tab, clear focus
   	if uistate.keyentered == "tab" then
     	uistate.kbditem = 0
     end
-  	--Clear the entered key
+  	-- clear the entered key
   	uistate.keyentered = 0
+  	-- clear the entered text
+  	uistate.text = 0
 end
 
 -------------------------------------------------------------------------------
@@ -134,6 +136,11 @@ end
 
 -------------------------------------------------------------------------------
 function core.keyreleased( key )
+end
+
+-------------------------------------------------------------------------------
+function core.textinput( text )
+	uistate.text = text 
 end
 
 -------------------------------------------------------------------------------
@@ -171,7 +178,7 @@ end
 function core.printState( x, y )
 	draw.setDefaultFont( 12 )
 	draw.color( "brown", 0x80 )
-	draw.rect( x, y, 140, 200 )
+	draw.rect( x, y, 140, 220 )
 	draw.color( "white" )
 	function p( x, y, name, value )
 		draw.print( name .. " = " .. tostring( value ) , x + 5, y )
