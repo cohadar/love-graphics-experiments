@@ -85,7 +85,7 @@ function slider( value, size, rect )
     local id, uistate = core.nextId()
     local percent = getPercentFromValue( value, size )
     value = getValueFromPercent( percent, size )
-    core.checkRect2( id, rect )
+    core.checkRect( id, rect )
     local mod = core.getMods( id )
     style.drawSlider( rect, mod, percent )
     -- Update widget value

@@ -31,7 +31,7 @@ function luatable( rect, table )
 	table = table or uistate
 
 	rect = { x = rect.x, y = rect.y, w = rect.w or 0, h = rect.h or 0 }
-	core.checkRect2( id, rect )
+	core.checkRect( id, rect )
 
 	style.drawLuaTable( rect, core.getMods( id ), table )
 

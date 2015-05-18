@@ -73,9 +73,9 @@ end
 function style.drawButton( rect, mods, text )
 	draw.setDefaultFont()
 	setWidgetColor( mods )
-	draw.rect2( rect )
+	draw.rect( rect )
 	setBorderColor( mods )
-	draw.border2( rect )
+	draw.border( rect )
 	if mods.focus then
 		drawFocus2( rect )
 	end	
@@ -87,9 +87,9 @@ end
 function style.drawDialog( rect, mods, title )
 	draw.setDefaultFont()
 	setWidgetColor( mods )
-	draw.rect2( rect )
+	draw.rect( rect )
 	setBorderColor( mods )
-	draw.border2( rect )
+	draw.border( rect )
 	if mods.focus then
 		drawFocus2( rect )
 	end	
@@ -100,9 +100,9 @@ end
 -------------------------------------------------------------------------------
 function style.drawTextField( rect, mods, text )
 	setWidgetColor( mods )
-	draw.rect2( rect )
+	draw.rect( rect )
 	setBorderColor( mods )
-	draw.border2( rect )	
+	draw.border( rect )	
 	if mods.focus then
 		drawFocus2( rect )
 	end	
@@ -157,9 +157,9 @@ function style.drawLuaTable( rect, mods, luaTable )
 	rect.w = math.max( rect.w, maxlen + 10 )
 	rect.h = math.max( rect.h, count * fontHeight )
 	setWidgetColor( mods )
-	draw.rect2( rect )
+	draw.rect( rect )
 	setBorderColor( mods )
-	draw.border2( rect )	
+	draw.border( rect )	
 	setTextColor( mods )
 	function p( x, y, key, value )
 		draw.print( key .. " = " .. tostring( value ) , x + 5, y )

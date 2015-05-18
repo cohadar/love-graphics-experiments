@@ -33,7 +33,7 @@ end
 function textfield( buffer, rect )
 	local id, uistate = core.nextId()
 
-	core.checkRect2( id, rect )
+	core.checkRect( id, rect )
 
 	style.drawTextField( rect, core.getMods( id ), buffer )
 

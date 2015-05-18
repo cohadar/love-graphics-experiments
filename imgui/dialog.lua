@@ -5,13 +5,7 @@ local core = require( BASE .. "core" )
 local style = require( BASE .. "style" )
 local dialog = {}
 
--------------------------------------------------------------------------------
-local function push()
-end
-
--------------------------------------------------------------------------------
-local function pop()
-end
+local rects = {}
 
 -------------------------------------------------------------------------------
 local function keyboardOn( id, uistate )
@@ -38,14 +32,27 @@ end
 function dialog.start( title, rect )
 	local id, uistate = core.nextId()
 
+	if rect == nil then
+		if rects[ id ] == nil then
+			rects[ id ] = { x = -1, y = -1, w = -1, h = -1 }
+		end
+		rect = rects[ id ]
+	end
+	core.push( rect )
 	style.drawDialog( rect, core.getMods( id ), title )
-
-	push( rect )
 end
 
 -------------------------------------------------------------------------------
 function dialog.stop()
-	return pop()
+	local rect = core.pop()
+	if rect.adjusted ~= true then
+		rect.adjusted = true
+		rect.x = rect.x - 5
+		rect.y = rect.y - 5 - 20
+		rect.w = rect.w + 10
+		rect.h = rect.h + 10 + 20
+	end
+	return rect
 end
 
 -------------------------------------------------------------------------------

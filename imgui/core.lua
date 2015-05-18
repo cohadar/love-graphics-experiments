@@ -36,6 +36,53 @@ function core.nextId()
 end
 
 -------------------------------------------------------------------------------
+local _stack = {}
+
+-------------------------------------------------------------------------------
+function core.push( data )
+	table.insert( _stack, data )
+end
+
+-------------------------------------------------------------------------------
+function core.pop()
+	assert( #_stack > 0, "pop on empty stack" )
+	return table.remove( _stack )
+end
+
+-------------------------------------------------------------------------------
+local function top()
+	return _stack[ #_stack ]
+end
+
+-------------------------------------------------------------------------------
+local function expandParentRect( parent, child )
+	if parent.x == -1 then
+		parent.x = child.x
+	end
+	if parent.y == -1 then
+		parent.y = child.y
+	end
+	if parent.w == -1 then
+		parent.w = child.w
+	end
+	if parent.h == -1 then
+		parent.h = child.h
+	end
+	if child.x < parent.x then
+		parent.x = child.x
+	end
+	if child.y < parent.y then
+		parent.y = child.y
+	end
+	if child.x + child.w > parent.x + parent.w then
+		parent.w = child.x + child.w - parent.x
+	end
+	if child.y + child.h > parent.y + parent.h then
+		parent.h = child.y + child.h - parent.y
+	end
+end
+
+-------------------------------------------------------------------------------
 -- Check whether current mouse position is within a rectangle
 -------------------------------------------------------------------------------
 local function isRectHot( x, y, w, h )
@@ -51,24 +98,15 @@ end
 -------------------------------------------------------------------------------
 -- check if widget is hot and active, call in every ( square ) widget
 -------------------------------------------------------------------------------
-function core.checkRect( id, x, y, w, h )
-	if isRectHot( x, y, w, h ) then
-		uistate.hotitem = id
-		if uistate.mousedown and uistate.activeitem == 0 then
-	  		uistate.activeitem = id
-	  	end
-	end
-end 
-
--------------------------------------------------------------------------------
--- check if widget is hot and active, call in every ( square ) widget
--------------------------------------------------------------------------------
-function core.checkRect2( id, rect )
+function core.checkRect( id, rect )
 	if isRectHot( rect.x, rect.y, rect.w, rect.h ) then
 		uistate.hotitem = id
 		if uistate.mousedown and uistate.activeitem == 0 then
 	  		uistate.activeitem = id
 	  	end
+	end
+	if top() ~= nil then
+		expandParentRect( top(), rect )
 	end
 end 
 

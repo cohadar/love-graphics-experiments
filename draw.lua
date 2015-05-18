@@ -53,27 +53,20 @@ function draw.alignOffset( box_width, text_width, align )
 end
 
 -------------------------------------------------------------------------------
-function draw.rect( x, y, width, height, color, alpha )
-	assert( color == nil )
-	love.graphics.rectangle( "fill", x, y, width, height )
+function draw.rect( x, y, w, h )
+	if type( x ) == "table" then
+		x, y, w, h = x.x, x.y, x.w, x.h
+	end 
+	love.graphics.rectangle( "fill", x, y, w, h )
 end
 
 -------------------------------------------------------------------------------
-function draw.rect2( rect )
-	love.graphics.rectangle( "fill", rect.x, rect.y, rect.w, rect.h )
-end
-
--------------------------------------------------------------------------------
-function draw.border( x, y, width, height, color, alpha )
-	assert( color == nil )
-	love.graphics.rectangle( "line", x+0.5, y+0.5, width, height )
-end
-
--------------------------------------------------------------------------------
--- we add 0.5 for pixel centering
--------------------------------------------------------------------------------
-function draw.border2( rect )
-	love.graphics.rectangle( "line", rect.x + 0.5, rect.y + 0.5, rect.w, rect.h )
+function draw.border( x, y, w, h )
+	if type( x ) == "table" then
+		x, y, w, h = x.x, x.y, x.w, x.h
+	end 
+	-- we add 0.5 for pixel centering
+	love.graphics.rectangle( "line", x + 0.5, y + 0.5, w, h )
 end
 
 -------------------------------------------------------------------------------

@@ -13,7 +13,7 @@ local buffer = "Default Text"
 -------------------------------------------------------------------------------
 function gui.draw()
 
-	imgui.dialog.start( "Dialog Title", { x = 25, y = 25, w = 150, h = 150 } )
+	imgui.dialog.start( "Dialog Title" )
 
 	if imgui.button( "Hello", { x = 50, y = 50, w = 50, h = 24 } ) then
 		text.print( "a" )
@@ -22,7 +22,8 @@ function gui.draw()
 		text.print( "b" )
 	end
 
-	imgui.dialog.stop()
+	local dialog_rect = imgui.dialog.stop()
+	imgui.luatable( { x = 500, y = 20 }, dialog_rect )
 
 	imgui.printState{ x = 5, y = 180 }
 
