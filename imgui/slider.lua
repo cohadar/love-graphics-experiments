@@ -36,14 +36,6 @@ local function getPercentFromMouse( uistate, y, height )
 end
 
 -------------------------------------------------------------------------------
-local function wheel( id, uistate )
-    if uistate.hotitem == id then
-        return uistate.mousewheel
-    end
-    return 0
-end
-
--------------------------------------------------------------------------------
 local function valueRebound( value, size )
     if value < 0 then
         return 0
@@ -56,7 +48,7 @@ end
 
 -------------------------------------------------------------------------------
 local function getValueFromWheel( id, uistate, value, size )
-    local wh = wheel( id, uistate )
+    local wh = uistate.mousewheel
     if wh ~= 0 then
         if math.abs( wh ) == 1 then
             value = value + wh
@@ -97,22 +89,23 @@ slider = function( x, y, width, height, size, value )
     local mod = core.getMods( id )
     style.drawSlider( x, y, width, height, mod, percent )
     -- Update widget value
+    local v = keyboardOn( id, uistate, value, size )
+    if v ~= value then
+        return true, v
+    end       
     if mod.active then
         local percent = getPercentFromMouse( uistate, y, height )
         local v = getValueFromPercent( percent, size )
         if v ~= value then
             return true, v
         end
-    elseif mod.hot then
+    end
+    if mod.hot or mod.focus then
         local v = getValueFromWheel( id, uistate, value, size )
         if v ~= value then
             return true, v
         end        
-    end
-    local v = keyboardOn( id, uistate, value, size )
-    if v ~= value then
-        return true, v
-    end        
+    end     
     return false, value
 end
 

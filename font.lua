@@ -33,6 +33,7 @@ function font.set( fontName, fontSize )
 		_fontCache[ k ] = love.graphics.newFont( _nameMap[ fontName ], fontSize )
 	end
 	love.graphics.setFont( _fontCache[ k ] )
+	return _fontCache[ k ]
 end
 
 -------------------------------------------------------------------------------

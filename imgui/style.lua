@@ -83,8 +83,13 @@ function style.drawTextField( x, y, w, h, mod, text )
 		drawFocus( x, y, w, h )
 	end	
 	setTextColor( mod )
-	draw.setInputFont( h - 4 )
+	local font_width = draw.setInputFont( h - 4 )
 	draw.print( text, x + 2, y + 2 )
+	-- render cursor if we have keyboard focus
+	local len = string.len( text )
+  	if mod.focus and mod.tick > 30 then
+    	draw.print( "_", x + len * font_width, y )
+    end
 end
 
 -------------------------------------------------------------------------------

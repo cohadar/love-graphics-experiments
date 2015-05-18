@@ -69,7 +69,8 @@ end
 
 -------------------------------------------------------------------------------
 function draw.setInputFont( optional_size )
-	font.set( "input", optional_size )
+	local _font = font.set( "input", optional_size )
+	return _font:getWidth( "M" )
 end
 
 -------------------------------------------------------------------------------

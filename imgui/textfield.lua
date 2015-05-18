@@ -37,6 +37,9 @@ textfield = function( x, y, w, h, buffer )
 		uistate.kbditem = id
 	end
 
+	
+	local changed = false	
+
 	keyboardOn( id, uistate )
 
 	return false, buffer

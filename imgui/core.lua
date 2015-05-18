@@ -16,6 +16,7 @@ local uistate = {
 	hotitem = 0,
 	activeitem = 0,
 	kbditem = 0,
+	keychar = 0,
 
   	keyentered = nil,
   	lastwidget = 0,	
@@ -87,6 +88,7 @@ function core.getMods( id )
 		hot    = ( uistate.hotitem == id ),
 		active = ( uistate.activeitem == id ),
 		focus  = ( uistate.kbditem == id ),
+		tick   = _tick,
 	}
 end
 
@@ -126,7 +128,7 @@ function core.finish()
   	-- clear the entered key
   	uistate.keyentered = 0
   	-- clear the entered text
-  	uistate.text = 0
+  	uistate.keychar = 0
 end
 
 -------------------------------------------------------------------------------
@@ -140,7 +142,7 @@ end
 
 -------------------------------------------------------------------------------
 function core.textinput( text )
-	uistate.text = text 
+	uistate.keychar = text 
 end
 
 -------------------------------------------------------------------------------
