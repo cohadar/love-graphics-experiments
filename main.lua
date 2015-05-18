@@ -58,7 +58,7 @@ end
 function love.keypressed( key, isrepeat )
 	if key == "escape" then
 		love.event.quit()
-	elseif key == "up" or key == "w" then
+	elseif key == "w" then
 		local old_width = love.graphics.getWidth() / conf.SCALE_GRAPHICS
 		local old_height = love.graphics.getHeight() / conf.SCALE_GRAPHICS
 		if conf.SCALE_GRAPHICS < 1 then
@@ -67,7 +67,7 @@ function love.keypressed( key, isrepeat )
 			conf.SCALE_GRAPHICS = conf.SCALE_GRAPHICS + 1
 		end
 		rescale( old_width , old_height )
-	elseif key == "down" or key == "s" then
+	elseif key == "s" then
 		local old_width = love.graphics.getWidth() / conf.SCALE_GRAPHICS
 		local old_height = love.graphics.getHeight() / conf.SCALE_GRAPHICS
 		if conf.SCALE_GRAPHICS > 1 then

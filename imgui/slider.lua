@@ -44,6 +44,17 @@ local function wheel( id, uistate )
 end
 
 -------------------------------------------------------------------------------
+local function valueRebound( value, size )
+    if value < 0 then
+        return 0
+    end
+    if value > size - 1 then
+        return size - 1
+    end
+    return value
+end
+
+-------------------------------------------------------------------------------
 local function getValueFromWheel( id, uistate, value, size )
     local wh = wheel( id, uistate )
     if wh ~= 0 then
@@ -52,13 +63,38 @@ local function getValueFromWheel( id, uistate, value, size )
         else
             value = value + wh * math.floor( 1 + size * 0.01 )
         end
-        if value < 0 then
-            value = 0
-        end
-        if value > size - 1 then
-            value = size - 1
+        value = valueRebound( value, size )
+    end
+    return value
+end
+
+-------------------------------------------------------------------------------
+local function keyboardOn( id, uistate, value, size )
+    if uistate.kbditem == 0 then
+        uistate.kbditem = id
+    end     
+    if uistate.kbditem == id then
+        if uistate.keyentered == "tab" then
+            uistate.keyentered = 0
+            uistate.kbditem = 0
+            if love.keyboard.isDown( "lshift" ) or love.keyboard.isDown( "rshift" ) then
+                uistate.kbditem = uistate.lastwidget
+            end
+        elseif uistate.keyentered == "up" then
+            uistate.keyentered = 0
+            return valueRebound( value - 1, size )
+        elseif uistate.keyentered == "down" then
+            uistate.keyentered = 0
+            return valueRebound( value + 1, size )
+        elseif uistate.keyentered == "pageup" then
+            uistate.keyentered = 0
+            return valueRebound( value - 5 * math.floor( 1 + size * 0.01 ), size )
+        elseif uistate.keyentered == "pagedown" then
+            uistate.keyentered = 0
+            return valueRebound( value + 5 * math.floor( 1 + size * 0.01 ), size )            
         end
     end
+    uistate.lastwidget = id;
     return value
 end
 
@@ -83,6 +119,10 @@ slider = function( x, y, width, height, size, value )
             return true, v
         end        
     end
+    local v = keyboardOn( id, uistate, value, size )
+    if v ~= value then
+        return true, v
+    end        
     return false, value
 end
 

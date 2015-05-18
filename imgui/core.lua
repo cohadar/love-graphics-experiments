@@ -18,7 +18,6 @@ local uistate = {
 	kbditem = 0,
 
   	keyentered = nil,
-  	keymod = nil,
   	lastwidget = 0,	
 }
 
@@ -145,19 +144,15 @@ end
 function core.printState( x, y )
 	draw.setDefaultFont( 12 )
 	draw.color( "brown", 0x80 )
-	draw.rect( x, y, 140, 170 )
+	draw.rect( x, y, 140, 200 )
 	draw.color( "white" )
 	function p( x, y, name, value )
 		draw.print( name .. " = " .. tostring( value ) , x + 5, y )
 	end
-	p( x, y + 10,  "mousex"     , uistate.mousex )
-	p( x, y + 30,  "mousey"     , uistate.mousey )
-	p( x, y + 50,  "mousedown"  , uistate.mousedown )
-	p( x, y + 70,  "mousewheel_acc" , uistate.mousewheel_acc )
-	p( x, y + 90,  "hotitem"    , uistate.hotitem )
-	p( x, y + 110, "activeitem" , uistate.activeitem )
-	p( x, y + 130, "kbditem"    , uistate.kbditem )
-	p( x, y + 150, "keyentered" , uistate.keyentered )
+	for key, value in pairs( uistate ) do
+		p( x, y, key, value )
+		y = y + 20
+	end
 end
 
 -------------------------------------------------------------------------------
