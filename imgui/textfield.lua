@@ -5,17 +5,6 @@ local core = require( BASE .. "core" )
 local style = require( BASE .. "style" )
 
 -------------------------------------------------------------------------------
-local function keyboardOn( id, uistate )
-	if core.hasKeyboardFocus( id ) then
-		if uistate.keyentered == "return" or uistate.keyentered == " " then
-			uistate.keyentered = 0
-			return true
-		end
-	end
-	return false
-end
-
--------------------------------------------------------------------------------
 local function mouseReleasedOn( id, uistate )
 	if uistate.mousedown == false and
 		uistate.hotitem == id and 
@@ -23,6 +12,21 @@ local function mouseReleasedOn( id, uistate )
 		return true
 	end
 	return false
+end
+
+-------------------------------------------------------------------------------
+local function keyboardOn( id, uistate, buffer )
+	if core.hasKeyboardFocus( id ) then
+		if uistate.keyentered == "backspace" then
+			uistate.keyentered = 0			
+			return true, string.sub( buffer, 1, string.len( buffer ) - 1 )
+		elseif uistate.keychar ~= 0 then
+			buffer = buffer .. uistate.keychar
+			uistate.keychar = 0
+			return true, buffer
+		end
+	end
+	return false, buffer
 end
 
 -------------------------------------------------------------------------------
@@ -37,12 +41,7 @@ textfield = function( x, y, w, h, buffer )
 		uistate.kbditem = id
 	end
 
-	
-	local changed = false	
-
-	keyboardOn( id, uistate )
-
-	return false, buffer
+	return keyboardOn( id, uistate, buffer )
 end
 
 
