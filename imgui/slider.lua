@@ -23,8 +23,8 @@ local function getPercentFromValue( value, size )
 end  
 
 -------------------------------------------------------------------------------
-local function getPercentFromMouse( y, height )
-    local mousepos = math.floor( core.getMouseY() - y )
+local function getPercentFromMouse( uistate, y, height )
+    local mousepos = math.floor( uistate.mousey - y )
     if mousepos < 0 then
         mousepos = 0
     end
@@ -36,8 +36,16 @@ local function getPercentFromMouse( y, height )
 end
 
 -------------------------------------------------------------------------------
-local function getValueFromWheel( id, value, size )
-    local wh = core.wheel( id )
+local function wheel( id, uistate )
+    if uistate.hotitem == id then
+        return uistate.mousewheel
+    end
+    return 0
+end
+
+-------------------------------------------------------------------------------
+local function getValueFromWheel( id, uistate, value, size )
+    local wh = wheel( id, uistate )
     if wh ~= 0 then
         if math.abs( wh ) == 1 then
             value = value + wh
@@ -56,7 +64,7 @@ end
 
 -------------------------------------------------------------------------------
 slider = function( x, y, width, height, size, value )
-    local id = core.nextId()
+    local id, uistate = core.nextId()
     local percent = getPercentFromValue( value, size )
     value = getValueFromPercent( percent, size )
     core.checkRegion( id, x, y, width, height )
@@ -64,13 +72,13 @@ slider = function( x, y, width, height, size, value )
     style.drawSlider( x, y, width, height, mod, percent )
     -- Update widget value
     if mod.active then
-        local percent = getPercentFromMouse( y, height )
+        local percent = getPercentFromMouse( uistate, y, height )
         local v = getValueFromPercent( percent, size )
         if v ~= value then
             return true, v
         end
     elseif mod.hot then
-        local v = getValueFromWheel( id, value, size )
+        local v = getValueFromWheel( id, uistate, value, size )
         if v ~= value then
             return true, v
         end        

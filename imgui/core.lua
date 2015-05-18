@@ -28,9 +28,17 @@ local _tick = 0
 local FPS = 60
 
 -------------------------------------------------------------------------------
+-- Returns widget id and current uistate, call in every widget
+-------------------------------------------------------------------------------
+function core.nextId()
+	_lastid = _lastid + 1
+	return _lastid, uistate
+end
+
+-------------------------------------------------------------------------------
 -- Check whether current mouse position is within a rectangle
 -------------------------------------------------------------------------------
-function core.regionhit( x, y, w, h )
+local function regionhit( x, y, w, h )
 	if uistate.mousex < x or uistate.mousey < y then
 		return false
 	end
@@ -41,8 +49,10 @@ function core.regionhit( x, y, w, h )
 end
 
 -------------------------------------------------------------------------------
+-- check if widget is hot and active, call in every widget
+-------------------------------------------------------------------------------
 function core.checkRegion( id, x, y, w, h )
-	if core.regionhit( x, y, w, h ) then
+	if regionhit( x, y, w, h ) then
 		uistate.hotitem = id
 		if uistate.mousedown and uistate.activeitem == 0 then
 	  		uistate.activeitem = id
@@ -51,36 +61,7 @@ function core.checkRegion( id, x, y, w, h )
 end 
 
 -------------------------------------------------------------------------------
-function core.keyboardOn( id )
-	if uistate.kbditem == 0 then
-    	uistate.kbditem = id
-    end		
-	if uistate.kbditem == id then
-		if uistate.keyentered == "tab" then
-			uistate.keyentered = 0
-			uistate.kbditem = 0
-			if love.keyboard.isDown( "lshift" ) or love.keyboard.isDown( "rshift" ) then
-				uistate.kbditem = uistate.lastwidget
-			end
-		elseif uistate.keyentered == "return" or uistate.keyentered == " " then
-			uistate.keyentered = 0
-			return true
-		end
-	end
-	uistate.lastwidget = id;
-	return false
-end
-
--------------------------------------------------------------------------------
-function core.mouseReleasedOn( id )
-	if uistate.mousedown == false and
-		uistate.hotitem == id and 
-		uistate.activeitem == id then
-		return true
-	end
-	return false
-end
-
+-- states passed to stile draw functions
 -------------------------------------------------------------------------------
 function core.getMods( id )
 	return {
@@ -91,24 +72,7 @@ function core.getMods( id )
 end
 
 -------------------------------------------------------------------------------
-function core.wheel( id )
-	if uistate.hotitem == id then
-		return uistate.mousewheel
-	end
-	return 0
-end
-
--------------------------------------------------------------------------------
-function core.getMouseY()
-	return uistate.mousey
-end
-
--------------------------------------------------------------------------------
-function core.nextId()
-	_lastid = _lastid + 1
-	return _lastid
-end
-
+-- call before all other imgui draw functions
 -------------------------------------------------------------------------------
 function core.prepare()
 	uistate.hotitem = 0
@@ -119,6 +83,8 @@ function core.prepare()
 	end
 end
 
+-------------------------------------------------------------------------------
+-- call after all other imgui draw functions
 -------------------------------------------------------------------------------
 function core.finish()
 	if uistate.mousedown == false then
@@ -133,25 +99,6 @@ function core.finish()
 		end	 
 		uistate.mousewheel_acc = 0
 	end 
-end
-
--------------------------------------------------------------------------------
-function core.printState( x, y )
-	draw.setDefaultFont( 12 )
-	draw.color( "brown", 0x80 )
-	draw.rect( x, y, 140, 170 )
-	draw.color( "white" )
-	function p( x, y, name, value )
-		draw.print( name .. " = " .. tostring( value ) , x + 5, y )
-	end
-	p( x, y + 10,  "mousex"     , uistate.mousex )
-	p( x, y + 30,  "mousey"     , uistate.mousey )
-	p( x, y + 50,  "mousedown"  , uistate.mousedown )
-	p( x, y + 70,  "mousewheel_acc" , uistate.mousewheel_acc )
-	p( x, y + 90,  "hotitem"    , uistate.hotitem )
-	p( x, y + 110, "activeitem" , uistate.activeitem )
-	p( x, y + 130, "kbditem"    , uistate.kbditem )
-	p( x, y + 150, "keyentered" , uistate.keyentered )
 end
 
 -------------------------------------------------------------------------------
@@ -192,6 +139,25 @@ end
 function core.mousemoved( x, y, dx, dy )
 	uistate.mousex = x
 	uistate.mousey = y
+end
+
+-------------------------------------------------------------------------------
+function core.printState( x, y )
+	draw.setDefaultFont( 12 )
+	draw.color( "brown", 0x80 )
+	draw.rect( x, y, 140, 170 )
+	draw.color( "white" )
+	function p( x, y, name, value )
+		draw.print( name .. " = " .. tostring( value ) , x + 5, y )
+	end
+	p( x, y + 10,  "mousex"     , uistate.mousex )
+	p( x, y + 30,  "mousey"     , uistate.mousey )
+	p( x, y + 50,  "mousedown"  , uistate.mousedown )
+	p( x, y + 70,  "mousewheel_acc" , uistate.mousewheel_acc )
+	p( x, y + 90,  "hotitem"    , uistate.hotitem )
+	p( x, y + 110, "activeitem" , uistate.activeitem )
+	p( x, y + 130, "kbditem"    , uistate.kbditem )
+	p( x, y + 150, "keyentered" , uistate.keyentered )
 end
 
 -------------------------------------------------------------------------------
