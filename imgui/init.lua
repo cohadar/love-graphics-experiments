@@ -6,6 +6,7 @@ assert( not BASE:match( '%.init%.$' ), "Invalid require path `"..(...).."' (drop
 imgui = {}
 
 local core       = require( BASE .. "core" )
+imgui.label      = require( BASE .. "label" )
 imgui.button     = require( BASE .. "button" )
 imgui.slider     = require( BASE .. "slider" )
 imgui.textfield  = require( BASE .. "textfield" )

@@ -13,7 +13,9 @@ local buffer = "Default Text"
 -------------------------------------------------------------------------------
 function gui.draw()
 
-	imgui.dialog.start( "Dialog Title" )
+	imgui.dialog.start()
+
+	imgui.label( "Dialog Title", { x = 50, y = 20, w = 50, h = 24 } )
 
 	if imgui.button( "Hello", { x = 50, y = 50, w = 50, h = 24 } ) then
 		text.print( "a" )

@@ -57,16 +57,12 @@ end
 
 -------------------------------------------------------------------------------
 local function drawFocus( x, y, w, h )
+	if type( x ) == "table" then
+		x, y, w, h = x.x, x.y, x.w, x.h
+	end 	
 	draw.color( colors.focus_border )
 	draw.border( x - 1, y - 1, w + 2, h + 2 )
 	draw.border( x - 2, y - 2, w + 4, h + 4 )
-end
-
--------------------------------------------------------------------------------
-local function drawFocus2( rect )
-	draw.color( colors.focus_border )
-	draw.border( rect.x - 1, rect.y - 1, rect.w + 2, rect.h + 2 )
-	draw.border( rect.x - 2, rect.y - 2, rect.w + 4, rect.h + 4 )
 end
 
 -------------------------------------------------------------------------------
@@ -77,24 +73,34 @@ function style.drawButton( rect, mods, text )
 	setBorderColor( mods )
 	draw.border( rect )
 	if mods.focus then
-		drawFocus2( rect )
+		drawFocus( rect )
 	end	
 	setTextColor( mods )
 	draw.print( text, rect.x + 4, rect.y + 2 )
 end
 
 -------------------------------------------------------------------------------
-function style.drawDialog( rect, mods, title )
+function style.drawLabel( rect, mods, text )
+	draw.setDefaultFont()
+	draw.color( colors.text )
+	draw.print( text, rect.x + 4, rect.y + 2 )
+end
+
+-------------------------------------------------------------------------------
+function style.drawDialog( rect, mods )
+	-- add border padding
+	if rect.iteration == 2 then
+		rect.x = rect.x - 5
+		rect.y = rect.y - 5 
+		rect.w = rect.w + 10
+		rect.h = rect.h + 10
+	end	
+	-- draw background	
 	draw.setDefaultFont()
 	setWidgetColor( mods )
 	draw.rect( rect )
 	setBorderColor( mods )
 	draw.border( rect )
-	if mods.focus then
-		drawFocus2( rect )
-	end	
-	setTextColor( mods )
-	draw.print( title, rect.x + 4, rect.y + 2 )
 end
 
 -------------------------------------------------------------------------------
@@ -104,7 +110,7 @@ function style.drawTextField( rect, mods, text )
 	setBorderColor( mods )
 	draw.border( rect )	
 	if mods.focus then
-		drawFocus2( rect )
+		drawFocus( rect )
 	end	
 	setTextColor( mods )
 	draw.setInputFont( rect.h - 4 )

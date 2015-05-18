@@ -29,7 +29,10 @@ local function mouseReleasedOn( id, uistate )
 end
 
 -------------------------------------------------------------------------------
-function dialog.start( title, rect )
+-- rect.iteration is used by style.drawDialog for delayed resize & draw
+-- that way dialog size can dynamically adjust to its content
+-------------------------------------------------------------------------------
+function dialog.start( rect )
 	local id, uistate = core.nextId()
 
 	if rect == nil then
@@ -38,19 +41,16 @@ function dialog.start( title, rect )
 		end
 		rect = rects[ id ]
 	end
+	rect.iteration = rect.iteration or 0
 	core.push( rect )
-	style.drawDialog( rect, core.getMods( id ), title )
+	style.drawDialog( rect, core.getMods( id ) )
 end
 
 -------------------------------------------------------------------------------
 function dialog.stop()
 	local rect = core.pop()
-	if rect.adjusted ~= true then
-		rect.adjusted = true
-		rect.x = rect.x - 5
-		rect.y = rect.y - 5 - 20
-		rect.w = rect.w + 10
-		rect.h = rect.h + 10 + 20
+	if rect.iteration < 10 then
+		rect.iteration = rect.iteration + 1
 	end
 	return rect
 end
