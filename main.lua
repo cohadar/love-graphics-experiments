@@ -35,7 +35,8 @@ end
 function love.load()
 	font.declare( "default", "fonts/apache/opensans/OpenSans-Regular.ttf", 14 )
 	font.set( "default" )
-	font.declare( "input", "fonts/ofl/arvo/Arvo-Regular.ttf", 14 )
+	--font.declare( "input", "fonts/ofl/inconsolata/Inconsolata-Regular.ttf", 14 )
+	font.declare( "input", "fonts/ofl/ptmono/PTM55FT.ttf", 14 )
 	imgui.init()
 end
 

@@ -23,56 +23,67 @@ local colors = {
 }
 
 -------------------------------------------------------------------------------
-function style.drawButton( x, y, w, h, mod )
+local function setWidgetColor( mod )
 	if mod.active then
 		draw.color( colors.active_widget )
-		draw.rect( x, y, w, h )
-		draw.color( colors.active_border )
-		draw.border( x, y, w, h )
 	elseif mod.hot then
 		draw.color( colors.hot_widget )
-		draw.rect( x, y, w, h )
-		draw.color( colors.hot_border )
-		draw.border( x, y, w, h )		
 	else
 		draw.color( colors.widget )
-		draw.rect( x, y, w, h )
+	end
+end
+
+-------------------------------------------------------------------------------
+local function setBorderColor( mod )
+	if mod.active then
+		draw.color( colors.active_border )
+	elseif mod.hot then
+		draw.color( colors.hot_border )
+	else
 		draw.color( colors.border )
-		draw.border( x, y, w, h )
-	end	
+	end
+end
+
+-------------------------------------------------------------------------------
+local function setTextColor( mod )
+	if mod.active then
+		draw.color( colors.active_text )
+	elseif mod.hot then
+		draw.color( colors.hot_text )
+	else
+		draw.color( colors.text )
+	end
+end
+
+-------------------------------------------------------------------------------
+local function drawFocus( x, y, w, h )
+	draw.color( colors.focus_border )
+	draw.border( x - 1, y - 1, w + 2, h + 2 )
+	draw.border( x - 2, y - 2, w + 4, h + 4 )
+end
+
+-------------------------------------------------------------------------------
+function style.drawButton( x, y, w, h, mod )
+	setWidgetColor( mod )
+	draw.rect( x, y, w, h )
+	setBorderColor( mod )
+	draw.border( x, y, w, h )
 	if mod.focus then
-		draw.color( colors.focus_border )
-		draw.border( x - 1, y - 1, w + 2, h + 2 )
-		draw.border( x - 2, y - 2, w + 4, h + 4 )
+		drawFocus( x, y, w, h )
 	end	
 end
 
 -------------------------------------------------------------------------------
 function style.drawTextField( x, y, w, h, mod, text )
-	if mod.active then
-		draw.color( colors.active_widget )
-		draw.rect( x, y, w, h )
-		draw.color( colors.active_border )
-		draw.border( x, y, w, h )
-		draw.color( colors.active_text )
-	elseif mod.hot then
-		draw.color( colors.hot_widget )
-		draw.rect( x, y, w, h )
-		draw.color( colors.hot_border )
-		draw.border( x, y, w, h )		
-		draw.color( colors.hot_text )
-	else
-		draw.color( colors.widget )
-		draw.rect( x, y, w, h )
-		draw.color( colors.border )
-		draw.border( x, y, w, h )
-		draw.color( colors.text )
-	end	
+	setWidgetColor( mod )
+	draw.rect( x, y, w, h )
+	setBorderColor( mod )
+	draw.border( x, y, w, h )	
 	if mod.focus then
-		draw.color( colors.focus_border )
-		draw.border( x - 1, y - 1, w + 2, h + 2 )
-		draw.border( x - 2, y - 2, w + 4, h + 4 )
+		drawFocus( x, y, w, h )
 	end	
+	setTextColor( mod )
+	draw.setInputFont( h - 4 )
 	draw.print( text, x + 2, y + 2 )
 end
 
@@ -82,34 +93,24 @@ function style.drawSlider( x, y, w, h, mod, percent )
 	-- calculate draw constants
 	local HEAD_SIZE = w
 	local SPINE_WIDTH = HEAD_SIZE * 3 / 5
-	local HEAD_DX = ( HEAD_SIZE - SPINE_WIDTH ) / 2
+	local DX = ( HEAD_SIZE - SPINE_WIDTH ) / 2
 	-- draw slider spine
-	draw.color( colors.widget )
-	draw.rect( x, y, SPINE_WIDTH, h )
+	setWidgetColor( mod )
+	draw.rect( x + DX, y, SPINE_WIDTH, h )
+	setBorderColor( mod )
+	draw.border( x + DX, y, SPINE_WIDTH, h )
 	if mod.focus then
-		draw.color( colors.focus_border )
-		draw.border( x - 1, y - 1, SPINE_WIDTH + 2, h + 2 )
-		draw.border( x - 2, y - 2, SPINE_WIDTH + 4, h + 4 )
-	elseif mod.active or mod.hot then
-		draw.color( colors.hot_border )
-		draw.border( x, y, SPINE_WIDTH, h )
-	else
-		draw.color( colors.border )
-		draw.border( x, y, SPINE_WIDTH, h )
-	end
+		drawFocus( x + DX, y, SPINE_WIDTH, h )
+	end	
 	-- draw slider head
 	local dy = ( h - HEAD_SIZE ) * percent
-  	if mod.active or mod.hot then
-  		draw.color( colors.hot_widget )
-		draw.rect( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE )
-	    draw.color( colors.hot_border )
-    	draw.border( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE )
-  	else
-  		draw.color( colors.widget )
-    	draw.rect( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE )
-	    draw.color( colors.border )
-    	draw.border( x - HEAD_DX, y + dy, HEAD_SIZE, HEAD_SIZE )
-    end   
+	setWidgetColor( mod )
+	draw.rect( x, y + dy, HEAD_SIZE, HEAD_SIZE )
+	setBorderColor( mod )
+	draw.border( x, y + dy, HEAD_SIZE, HEAD_SIZE )
+	if mod.focus then
+		drawFocus( x, y + dy, HEAD_SIZE, HEAD_SIZE )
+	end		
 end
 
 -------------------------------------------------------------------------------

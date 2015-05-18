@@ -68,4 +68,9 @@ function draw.setDefaultFont( optional_size )
 end
 
 -------------------------------------------------------------------------------
+function draw.setInputFont( optional_size )
+	font.set( "input", optional_size )
+end
+
+-------------------------------------------------------------------------------
 return draw

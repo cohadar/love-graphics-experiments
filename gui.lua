@@ -7,7 +7,7 @@ local font = require "font"
 
 
 local value = 0
-local buffer = "< enter text iwiwiw here >"
+local buffer = "Default Text"
 
 -------------------------------------------------------------------------------
 function gui.draw()
