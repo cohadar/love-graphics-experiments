@@ -51,8 +51,8 @@ function love.draw()
 
 	imgui.finish()
 
-	font.set( "default", 24 )
-	love.graphics.print( "The Quick Brown Fox Jumps Over a Lazy Dog.", 100, 300 )
+	--font.set( "default", 24 )
+	--love.graphics.print( "The Quick Brown Fox Jumps Over a Lazy Dog.", 100, 300 )
 	text.draw()
 end
 

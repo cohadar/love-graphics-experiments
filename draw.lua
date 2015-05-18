@@ -7,6 +7,7 @@ local font = require "font"
 
 -------------------------------------------------------------------------------
 _fontCache = {}
+_currentFont = nil
 
 -------------------------------------------------------------------------------
 draw.print = love.graphics.print
@@ -64,13 +65,36 @@ end
 
 -------------------------------------------------------------------------------
 function draw.setDefaultFont( optional_size )
-	font.set( "default", optional_size )
+	_currentFont = font.set( "default", optional_size )
 end
 
 -------------------------------------------------------------------------------
 function draw.setInputFont( optional_size )
-	local _font = font.set( "input", optional_size )
-	return _font:getWidth( "M" )
+	_currentFont = font.set( "input", optional_size )
+end
+
+-------------------------------------------------------------------------------
+function draw.getTextWidth( text )
+	if _currentFont == nil then
+		draw.setDefaultFont()
+	end
+	return _currentFont:getWidth( text )
+end
+
+-------------------------------------------------------------------------------
+function draw.getFontHeight()
+	if _currentFont == nil then
+		draw.setDefaultFont()
+	end
+	return _currentFont:getHeight()
+end
+
+-------------------------------------------------------------------------------
+function draw.getFontEm()
+	if _currentFont == nil then
+		draw.setDefaultFont()
+	end
+	return _currentFont:getWidth( "M" )
 end
 
 -------------------------------------------------------------------------------

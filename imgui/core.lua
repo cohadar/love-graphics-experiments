@@ -177,19 +177,4 @@ function core.mousemoved( x, y, dx, dy )
 end
 
 -------------------------------------------------------------------------------
-function core.printState( x, y )
-	draw.setDefaultFont( 12 )
-	draw.color( "brown", 0x80 )
-	draw.rect( x, y, 140, 220 )
-	draw.color( "white" )
-	function p( x, y, name, value )
-		draw.print( name .. " = " .. tostring( value ) , x + 5, y )
-	end
-	for key, value in pairs( uistate ) do
-		p( x, y, key, value )
-		y = y + 20
-	end
-end
-
--------------------------------------------------------------------------------
 return core

@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- This is the only module that is game specific.
+-- This is the only modsule that is game specific.
 -- It intentionally does not depend on anything else in imgui
 -------------------------------------------------------------------------------
 --- @module style
@@ -23,10 +23,10 @@ local colors = {
 }
 
 -------------------------------------------------------------------------------
-local function setWidgetColor( mod )
-	if mod.active then
+local function setWidgetColor( mods )
+	if mods.active then
 		draw.color( colors.active_widget )
-	elseif mod.hot then
+	elseif mods.hot then
 		draw.color( colors.hot_widget )
 	else
 		draw.color( colors.widget )
@@ -34,10 +34,10 @@ local function setWidgetColor( mod )
 end
 
 -------------------------------------------------------------------------------
-local function setBorderColor( mod )
-	if mod.active then
+local function setBorderColor( mods )
+	if mods.active then
 		draw.color( colors.active_border )
-	elseif mod.hot then
+	elseif mods.hot then
 		draw.color( colors.hot_border )
 	else
 		draw.color( colors.border )
@@ -45,10 +45,10 @@ local function setBorderColor( mod )
 end
 
 -------------------------------------------------------------------------------
-local function setTextColor( mod )
-	if mod.active then
+local function setTextColor( mods )
+	if mods.active then
 		draw.color( colors.active_text )
-	elseif mod.hot then
+	elseif mods.hot then
 		draw.color( colors.hot_text )
 	else
 		draw.color( colors.text )
@@ -63,59 +63,87 @@ local function drawFocus( x, y, w, h )
 end
 
 -------------------------------------------------------------------------------
-function style.drawButton( x, y, w, h, mod )
-	setWidgetColor( mod )
+function style.drawButton( x, y, w, h, mods )
+	setWidgetColor( mods )
 	draw.rect( x, y, w, h )
-	setBorderColor( mod )
+	setBorderColor( mods )
 	draw.border( x, y, w, h )
-	if mod.focus then
+	if mods.focus then
 		drawFocus( x, y, w, h )
 	end	
 end
 
 -------------------------------------------------------------------------------
-function style.drawTextField( x, y, w, h, mod, text )
-	setWidgetColor( mod )
+function style.drawTextField( x, y, w, h, mods, text )
+	setWidgetColor( mods )
 	draw.rect( x, y, w, h )
-	setBorderColor( mod )
+	setBorderColor( mods )
 	draw.border( x, y, w, h )	
-	if mod.focus then
+	if mods.focus then
 		drawFocus( x, y, w, h )
 	end	
-	setTextColor( mod )
-	local font_width = draw.setInputFont( h - 4 )
+	setTextColor( mods )
+	draw.setInputFont( h - 4 )
+	local char_width = draw.getFontEm()
 	draw.print( text, x + 2, y + 2 )
 	-- render cursor if we have keyboard focus
 	local len = string.len( text )
-  	if mod.focus and mod.tick > 30 then
-    	draw.print( "_", x + len * font_width, y )
+  	if mods.focus and mods.tick > 30 then
+    	draw.print( "_", x + len * char_width, y )
     end
 end
 
 -------------------------------------------------------------------------------
-function style.drawSlider( x, y, w, h, mod, percent )
+function style.drawSlider( x, y, w, h, mods, percent )
 	assert( percent >= 0 and percent <= 1 )
 	-- calculate draw constants
 	local HEAD_SIZE = w
 	local SPINE_WIDTH = HEAD_SIZE * 3 / 5
 	local DX = ( HEAD_SIZE - SPINE_WIDTH ) / 2
 	-- draw slider spine
-	setWidgetColor( mod )
+	setWidgetColor( mods )
 	draw.rect( x + DX, y, SPINE_WIDTH, h )
-	setBorderColor( mod )
+	setBorderColor( mods )
 	draw.border( x + DX, y, SPINE_WIDTH, h )
-	if mod.focus then
+	if mods.focus then
 		drawFocus( x + DX, y, SPINE_WIDTH, h )
 	end	
 	-- draw slider head
 	local dy = ( h - HEAD_SIZE ) * percent
-	setWidgetColor( mod )
+	setWidgetColor( mods )
 	draw.rect( x, y + dy, HEAD_SIZE, HEAD_SIZE )
-	setBorderColor( mod )
+	setBorderColor( mods )
 	draw.border( x, y + dy, HEAD_SIZE, HEAD_SIZE )
-	if mod.focus then
+	if mods.focus then
 		drawFocus( x, y + dy, HEAD_SIZE, HEAD_SIZE )
 	end		
+end
+
+-------------------------------------------------------------------------------
+function style.drawLuaTable( x, y, w, h, mods, luaTable )
+	draw.setDefaultFont()
+	local count = 0
+	local maxlen = 0
+	for key, value in pairs( luaTable ) do
+		count = count + 1
+		local lineLen = draw.getTextWidth( key .. " = " .. tostring( value ) )
+		maxlen = math.max( maxlen, lineLen )
+	end		
+	local fontHeight = draw.getFontHeight()
+	w = math.max( w, maxlen + 10 )
+	h = math.max( h, count * fontHeight )
+	setWidgetColor( mods )
+	draw.rect( x, y, w, h )
+	setBorderColor( mods )
+	draw.border( x, y, w, h )	
+	setTextColor( mods )
+	function p( x, y, key, value )
+		draw.print( key .. " = " .. tostring( value ) , x + 5, y )
+	end
+	for key, value in pairs( luaTable ) do
+		p( x, y, key, value )
+		y = y + fontHeight
+	end	
 end
 
 -------------------------------------------------------------------------------
