@@ -5,8 +5,6 @@ local core = require( BASE .. "core" )
 local style = require( BASE .. "style" )
 local dialog = {}
 
-local rects = {}
-
 -------------------------------------------------------------------------------
 local function keyboardOn( id, uistate )
 	if core.hasKeyboardFocus( id ) then
@@ -34,15 +32,16 @@ end
 -------------------------------------------------------------------------------
 function dialog.start( rect )
 	local id, uistate = core.nextId()
-
-	if rect == nil then
-		if rects[ id ] == nil then
-			rects[ id ] = { x = -1, y = -1, w = -1, h = -1 }
-		end
-		rect = rects[ id ]
-	end
+	rect = core.fixRect( id, rect )
 	rect.iteration = rect.iteration or 0
 	core.push( rect )
+	-- add border padding
+	if rect.iteration == 2 then
+		rect.x = rect.x - 5
+		rect.y = rect.y - 5 
+		rect.w = rect.w + 10
+		rect.h = rect.h + 10
+	end		
 	style.drawDialog( rect, core.getMods( id ) )
 end
 

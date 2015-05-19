@@ -66,17 +66,31 @@ local function drawFocus( x, y, w, h )
 end
 
 -------------------------------------------------------------------------------
-function style.drawButton( rect, mods, text )
-	draw.setDefaultFont()
+function style.drawButton( rect, mods, text )	
+	-- draw background
 	setWidgetColor( mods )
 	draw.rect( rect )
+	-- draw border
 	setBorderColor( mods )
 	draw.border( rect )
 	if mods.focus then
 		drawFocus( rect )
 	end	
+	-- adjust sizes
+	local X_PADDING = 4
+	local Y_PADDING = 2
+	draw.setDefaultFont()
+	if rect.adjust_w then
+		rect.adjust_w = false
+		rect.w = draw.getTextWidth( text ) + X_PADDING * 2
+	end
+	if rect.adjust_h then
+		rect.adjust_h = false
+		rect.h = draw.getFontHeight( text ) + Y_PADDING * 2
+	end	
+	-- draw text
 	setTextColor( mods )
-	draw.print( text, rect.x + 4, rect.y + 2 )
+	draw.print( text, rect.x + X_PADDING, rect.y + Y_PADDING )
 end
 
 -------------------------------------------------------------------------------
@@ -88,13 +102,6 @@ end
 
 -------------------------------------------------------------------------------
 function style.drawDialog( rect, mods )
-	-- add border padding
-	if rect.iteration == 2 then
-		rect.x = rect.x - 5
-		rect.y = rect.y - 5 
-		rect.w = rect.w + 10
-		rect.h = rect.h + 10
-	end	
 	-- draw background	
 	draw.setDefaultFont()
 	setWidgetColor( mods )

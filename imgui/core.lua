@@ -55,19 +55,43 @@ local function top()
 end
 
 -------------------------------------------------------------------------------
+local _rects = {}
+
+-------------------------------------------------------------------------------
+function core.fixRect( id, rect ) 
+	if _rects[ id ] == nil then
+		if rect == nil then
+			_rects[ id ] = { x = nil, y = nil, w = nil, h = nil }
+		else
+			_rects[ id ] = { x = rect.x, y = rect.y, w = rect.w, h = rect.h }
+		end
+	end
+	if _rects[ id ].x == nil then
+		_rects[ id ].x = 0
+		_rects[ id ].adjust_x = true
+	end
+	if _rects[ id ].y == nil then
+		_rects[ id ].y = 0
+		_rects[ id ].adjust_y = true
+	end		
+	if _rects[ id ].w == nil then
+		_rects[ id ].w = 0
+		_rects[ id ].adjust_w = true
+	end
+	if _rects[ id ].h == nil then
+		_rects[ id ].h = 0
+		_rects[ id ].adjust_h = true
+	end	
+	return _rects[ id ]
+end
+
+-------------------------------------------------------------------------------
 local function expandParentRect( parent, child )
-	if parent.x == -1 then
-		parent.x = child.x
-	end
-	if parent.y == -1 then
-		parent.y = child.y
-	end
-	if parent.w == -1 then
-		parent.w = child.w
-	end
-	if parent.h == -1 then
-		parent.h = child.h
-	end
+	parent.x = parent.x or child.x
+	parent.y = parent.y or child.y
+	parent.w = parent.w or child.w
+	parent.h = parent.h or child.h
+	
 	if child.x < parent.x then
 		parent.x = child.x
 	end
