@@ -29,6 +29,7 @@ local button_c = {
 local hline = {
 	y = 50,
 	align = "center",
+	spacing = 5,
 	elements = { button_a, button_b }
 }
 local dialog_abc = {
@@ -38,7 +39,6 @@ local flatt = {
 	x = 500, y = 20, 
 	flattable = dialog_abc
 }
-
 
 -------------------------------------------------------------------------------
 function gui.draw()
