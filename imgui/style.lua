@@ -138,28 +138,28 @@ function style.drawTextField( rect, mods, text )
 end
 
 -------------------------------------------------------------------------------
-function style.drawSlider( rect, mods, percent )
-	assert( percent >= 0 and percent <= 1 )
+function style.drawSlider( self, mods )
+	assert( self.percent >= 0 and self.percent <= 1 )
 	-- calculate draw constants
-	local HEAD_SIZE = rect.w
+	local HEAD_SIZE = self.w
 	local SPINE_WIDTH = HEAD_SIZE * 3 / 5
 	local DX = ( HEAD_SIZE - SPINE_WIDTH ) / 2
 	-- draw slider spine
 	setWidgetColor( mods )
-	draw.rect( rect.x + DX, rect.y, SPINE_WIDTH, rect.h )
+	draw.rect( self.x + DX, self.y, SPINE_WIDTH, self.h )
 	setBorderColor( mods )
-	draw.border( rect.x + DX, rect.y, SPINE_WIDTH, rect.h )
+	draw.border( self.x + DX, self.y, SPINE_WIDTH, self.h )
 	if mods.focus then
-		drawFocus( rect.x + DX, rect.y, SPINE_WIDTH, rect.h )
+		drawFocus( self.x + DX, self.y, SPINE_WIDTH, self.h )
 	end	
 	-- draw slider head
-	local dy = ( rect.h - HEAD_SIZE ) * percent
+	local dy = ( self.h - HEAD_SIZE ) * self.percent
 	setWidgetColor( mods )
-	draw.rect( rect.x, rect.y + dy, HEAD_SIZE, HEAD_SIZE )
+	draw.rect( self.x, self.y + dy, HEAD_SIZE, HEAD_SIZE )
 	setBorderColor( mods )
-	draw.border( rect.x, rect.y + dy, HEAD_SIZE, HEAD_SIZE )
+	draw.border( self.x, self.y + dy, HEAD_SIZE, HEAD_SIZE )
 	if mods.focus then
-		drawFocus( rect.x, rect.y + dy, HEAD_SIZE, HEAD_SIZE )
+		drawFocus( self.x, self.y + dy, HEAD_SIZE, HEAD_SIZE )
 	end		
 end
 

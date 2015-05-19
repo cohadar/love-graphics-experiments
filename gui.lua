@@ -6,8 +6,8 @@ local text = require "text"
 local font = require "font"
 
 
-local value = 0
-local size = 256
+local slider_a = { value = 0, size = 256, x = 200, y = 20, w = 20, h = 200 }
+
 local buffer = "Default Text"
 
 local dialog_rect = {}
@@ -48,11 +48,11 @@ function gui.draw()
 
 	imgui.luatable( { x = 500, y = 20 }, dialog_rect )
 	imgui.printState{ x = 5, y = 180 }
-	_, value =  imgui.slider( value, size, { x = 200, y = 20, w = 20, h = 200 } )
+	imgui.slider( slider_a )
 	_, buffer =  imgui.textfield( buffer, { x = 230, y = 20, w = 200, h = 20 } )
 
 	font.set( "default", 32 )
-	love.graphics.print( value, 220, 100 )
+	love.graphics.print( slider_a.value, 220, 100 )
 end
 
 -------------------------------------------------------------------------------

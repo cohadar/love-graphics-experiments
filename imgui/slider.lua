@@ -81,32 +81,35 @@ local function keyboardOn( id, uistate, value, size )
 end
 
 -------------------------------------------------------------------------------
-function slider( value, size, rect )
+function slider( self )
     local id, uistate = core.nextId()
-    local percent = getPercentFromValue( value, size )
-    value = getValueFromPercent( percent, size )
-    core.checkRect( id, rect )
+    self.percent = getPercentFromValue( self.value, self.size )
+    self.value = getValueFromPercent( self.percent, self.size )
+    core.checkRect( id, self )
     local mod = core.getMods( id )
-    style.drawSlider( rect, mod, percent )
+    style.drawSlider( self, mod )
     -- Update widget value
-    local v = keyboardOn( id, uistate, value, size )
-    if v ~= value then
-        return true, v
+    local v = keyboardOn( id, uistate, self.value, self.size )
+    if v ~= self.value then
+        self.value = v
+        return true
     end       
     if mod.active then
-        local percent = getPercentFromMouse( uistate, y, height )
-        local v = getValueFromPercent( percent, size )
-        if v ~= value then
-            return true, v
-        end
+        local percent = getPercentFromMouse( uistate, self.y, self.h )
+        local v = getValueFromPercent( percent, self.size )
+        if v ~= self.value then
+            self.value = v
+            return true
+        end  
     end
     if mod.hot or mod.focus then
-        local v = getValueFromWheel( id, uistate, value, size )
-        if v ~= value then
-            return true, v
-        end        
+        local v = getValueFromWheel( id, uistate, self.value, self.size )
+        if v ~= self.value then
+            self.value = v
+            return true
+        end     
     end     
-    return false, value
+    return false
 end
 
 -------------------------------------------------------------------------------
