@@ -36,7 +36,7 @@ function textfield( self )
 
 	core.checkRect( id, self )
 
-	style.drawTextField( self, core.getMods( id ) )
+	style.textfield( self, core.getMods( id ) )
 
 	if mouseReleasedOn( id, uistate ) then
 		uistate.kbditem = id

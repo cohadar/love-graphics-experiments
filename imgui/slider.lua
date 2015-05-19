@@ -87,7 +87,7 @@ function slider( self )
     self.value = getValueFromPercent( self.percent, self.size )
     core.checkRect( id, self )
     local mod = core.getMods( id )
-    style.drawSlider( self, mod )
+    style.slider( self, mod )
     -- Update widget value
     local v = keyboardOn( id, uistate, self.value, self.size )
     if v ~= self.value then

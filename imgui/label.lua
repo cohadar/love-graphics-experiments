@@ -9,7 +9,7 @@ function label( state )
 	local id, uistate = core.nextId()
 	core.fixRect( state )
 	core.checkRect( id, state )
-	style.drawLabel( state, core.getMods( id ) )
+	style.label( state, core.getMods( id ) )
 end
 
 -------------------------------------------------------------------------------

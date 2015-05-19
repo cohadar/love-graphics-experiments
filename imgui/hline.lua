@@ -29,7 +29,7 @@ function hline( self )
 	self.x = 0
 	self.w = 1000
 	self.h = 1
-	if self.align and self.elements and core.getTick() == 3 then
+	if self.align and self.elements and core.isAlignTick() then
 		alignElements( self.y, self.align, self.elements )
 	end
 	local id, uistate = core.nextId()

@@ -3,41 +3,75 @@
 local BASE = (...):match("(.-)[^%.]+$")
 local core = require( BASE .. "core" )
 local style = require( BASE .. "style" )
-local dialog = {}
 
 -------------------------------------------------------------------------------
-local function keyboardOn( id, uistate )
-	if core.hasKeyboardFocus( id ) then
-		if uistate.keyentered == "return" or uistate.keyentered == " " then
-			uistate.keyentered = 0
-			return true
-		end
+local function resizeParent( parent, child )
+	if parent.adjust_x then
+		parent.adjust_x = false
+		parent.x = child.x
 	end
-	return false
+	if parent.adjust_y then
+		parent.adjust_y = false
+		parent.y = child.y
+	end
+	if parent.adjust_w then
+		parent.adjust_w = false
+		parent.w = child.w
+	end
+	if parent.adjust_h then
+		parent.adjust_h = false
+		parent.h = child.h
+	end
+	if child.x < parent.x then
+		parent.x = child.x
+	end
+	if child.y < parent.y then
+		parent.y = child.y
+	end
+	if child.x + child.w > parent.x + parent.w then
+		parent.w = child.x + child.w - parent.x
+	end
+	if child.y + child.h > parent.y + parent.h then
+		parent.h = child.y + child.h - parent.y
+	end
+	if parent.adjust_child then
+		parent.adjust_child( parent, child )
+	end
 end
 
 -------------------------------------------------------------------------------
-local function mouseReleasedOn( id, uistate )
-	if uistate.mousedown == false and
-		uistate.hotitem == id and 
-		uistate.activeitem == id then
-		return true
+local function surroundElements( parent, elements )
+	for _, child in ipairs( elements ) do
+		resizeParent( parent, child )
 	end
-	return false
 end
 
 -------------------------------------------------------------------------------
--- self.iteration is used by style.drawDialog for delayed resize & draw
--- that way dialog size can dynamically adjust to its content
+local function addPadding( rect, padding )
+	rect.x = rect.x - padding
+	rect.y = rect.y - padding
+	rect.w = rect.w + padding * 2
+	rect.h = rect.h + padding * 2			
+end
+
+-------------------------------------------------------------------------------
+-- dialog resizes itself to surround all elements
 -------------------------------------------------------------------------------
 function dialog( self )
+	assert( self.elements, "elements" )
 	local id, uistate = core.nextId()
 	core.fixRect( self )
-	self.iteration = self.iteration or 0	
-	style.drawDialog( self, core.getMods( id ) )
-	if self.iteration < 10 then
-		self.iteration = self.iteration + 1
-	end	
+	style.dialog( self, core.getMods( id ) )
+	if core.isAfterAlignTick() then
+		rect = {}
+		core.fixRect( rect )
+		surroundElements( rect, self.elements )
+		addPadding( rect, 5 )
+		self.x = rect.x 
+		self.y = rect.y 
+		self.h = rect.h 
+		self.w = rect.w
+	end
 end
 
 -------------------------------------------------------------------------------

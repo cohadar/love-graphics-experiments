@@ -66,7 +66,7 @@ local function drawFocus( x, y, w, h )
 end
 
 -------------------------------------------------------------------------------
-function style.drawButton( state, mods )	
+function style.button( state, mods )	
 	-- draw background
 	setWidgetColor( mods )
 	draw.rect( state )
@@ -101,22 +101,14 @@ function style.hline( state )
 end
 
 -------------------------------------------------------------------------------
-function style.drawLabel( state, mods )
+function style.label( state, mods )
 	draw.setDefaultFont()
 	draw.color( colors.text )
 	draw.print( state.text, state.x + 4, state.y + 2 )
 end
 
 -------------------------------------------------------------------------------
-function style.drawDialog( rect, mods )
-	-- add border padding
-	if rect.iteration == 2 then
-		rect.x = rect.x - 5
-		rect.y = rect.y - 5 
-		rect.w = rect.w + 10
-		rect.h = rect.h + 10
-	end			
-	-- draw background	
+function style.dialog( rect, mods )	
 	draw.setDefaultFont()
 	setWidgetColor( mods )
 	draw.rect( rect )
@@ -125,7 +117,7 @@ function style.drawDialog( rect, mods )
 end
 
 -------------------------------------------------------------------------------
-function style.drawTextField( self, mods )
+function style.textfield( self, mods )
 	setWidgetColor( mods )
 	draw.rect( self )
 	setBorderColor( mods )
@@ -145,7 +137,7 @@ function style.drawTextField( self, mods )
 end
 
 -------------------------------------------------------------------------------
-function style.drawSlider( self, mods )
+function style.slider( self, mods )
 	assert( self.percent >= 0 and self.percent <= 1 )
 	-- calculate draw constants
 	local HEAD_SIZE = self.w
@@ -171,7 +163,7 @@ function style.drawSlider( self, mods )
 end
 
 -------------------------------------------------------------------------------
-function style.drawFlatTable( self, mods )
+function style.flattable( self, mods )
 	draw.setDefaultFont()
 	local count = 0
 	local maxlen = 0

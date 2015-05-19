@@ -32,7 +32,7 @@ function button( state )
 	core.fixRect( state )
 	core.checkRect( id, state )
 
-	style.drawButton( state, core.getMods( id ) )
+	style.button( state, core.getMods( id ) )
 
 	-- TODO: set active mod when button used via keyboard
 	return keyboardOn( id, uistate ) or mouseReleasedOn( id, uistate )

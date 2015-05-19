@@ -34,7 +34,7 @@ function flattable( self )
 	self.h = self.h or 0
 	core.checkRect( id, self )
 
-	style.drawFlatTable( self, core.getMods( id ) )
+	style.flattable( self, core.getMods( id ) )
 
 	return false
 end

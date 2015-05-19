@@ -28,8 +28,13 @@ local _tick = 0
 local FPS = 60
 
 -------------------------------------------------------------------------------
-function core.getTick()
-	return _tick
+function core.isAlignTick()
+	return _tick == 2
+end
+
+-------------------------------------------------------------------------------
+function core.isAfterAlignTick()
+	return _tick == 3
 end
 
 -------------------------------------------------------------------------------
@@ -38,41 +43,6 @@ end
 function core.nextId()
 	_lastid = _lastid + 1
 	return _lastid, uistate
-end
-
--------------------------------------------------------------------------------
-local function fixParentRect( parent, child )
-	if parent.adjust_x then
-		parent.adjust_x = false
-		parent.x = child.x
-	end
-	if parent.adjust_y then
-		parent.adjust_y = false
-		parent.y = child.y
-	end
-	if parent.adjust_w then
-		parent.adjust_w = false
-		parent.w = child.w
-	end
-	if parent.adjust_h then
-		parent.adjust_h = false
-		parent.h = child.h
-	end
-	if child.x < parent.x then
-		parent.x = child.x
-	end
-	if child.y < parent.y then
-		parent.y = child.y
-	end
-	if child.x + child.w > parent.x + parent.w then
-		parent.w = child.x + child.w - parent.x
-	end
-	if child.y + child.h > parent.y + parent.h then
-		parent.h = child.y + child.h - parent.y
-	end
-	if parent.adjust_child then
-		parent.adjust_child( parent, child )
-	end
 end
 
 -------------------------------------------------------------------------------
@@ -93,9 +63,7 @@ function core.fixRect( rect )
 		rect.h = 0
 		rect.adjust_h = true
 	end	
-	if rect.parent then
-		fixParentRect( rect.parent, rect )
-	end
+	return rect
 end
 
 -------------------------------------------------------------------------------
