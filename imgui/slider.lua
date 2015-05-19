@@ -81,7 +81,7 @@ local function keyboardOn( id, uistate, value, size )
 end
 
 -------------------------------------------------------------------------------
-function slider( self )
+local function slider( self )
     local id, uistate = core.nextId()
     self.percent = getPercentFromValue( self.value, self.size )
     self.value = getValueFromPercent( self.percent, self.size )

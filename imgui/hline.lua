@@ -31,7 +31,7 @@ local function alignElements( y, align, spacing, elements )
 end
 
 -------------------------------------------------------------------------------
-function hline( self )
+local function hline( self )
 	assert( self.y, "hline must specify y" )
 	self.x = self.x or 0
 	self.w = self.w or 1000

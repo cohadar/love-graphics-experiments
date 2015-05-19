@@ -31,7 +31,7 @@ local function keyboardOn( self, id, uistate )
 end
 
 -------------------------------------------------------------------------------
-function textfield( self )
+local function textfield( self )
 	local id, uistate = core.nextId()
 
 	core.checkRect( id, self )

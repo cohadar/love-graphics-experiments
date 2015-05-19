@@ -95,14 +95,42 @@ end
 
 -------------------------------------------------------------------------------
 function style.hline( state )	
-	-- draw border
 	draw.color( colors.border )
-	draw.border( state )
+	draw.hline( state.y )
+end
+
+-------------------------------------------------------------------------------
+function style.vline( state )	
+	draw.color( colors.border )
+	draw.vline( state.x )
+end
+
+-------------------------------------------------------------------------------
+function style.getCenterX()	
+	return draw.getCenterX()
+end
+
+-------------------------------------------------------------------------------
+function style.getCenterY()	
+	return draw.getCenterY()
 end
 
 -------------------------------------------------------------------------------
 function style.label( state, mods )
 	draw.setDefaultFont()
+	-- adjust sizes
+	local X_PADDING = 4
+	local Y_PADDING = 2
+	draw.setDefaultFont()
+	if state.adjust_w then
+		state.adjust_w = false
+		state.w = draw.getTextWidth( state.text ) + X_PADDING * 2
+	end
+	if state.adjust_h then
+		state.adjust_h = false
+		state.h = draw.getFontHeight( state.text ) + Y_PADDING * 2
+	end	
+	-- draw label	
 	draw.color( colors.text )
 	draw.print( state.text, state.x + 4, state.y + 2 )
 end

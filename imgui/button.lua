@@ -26,7 +26,7 @@ local function mouseReleasedOn( id, uistate )
 end
 
 -------------------------------------------------------------------------------
-function button( state )
+local function button( state )
 	local id, uistate = core.nextId()
 
 	core.fixRect( state )

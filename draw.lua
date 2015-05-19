@@ -33,6 +33,16 @@ function draw.vline( x )
 end
 
 -------------------------------------------------------------------------------
+function draw.getCenterX()
+    return conf.SCREEN_WIDTH / 2
+end
+
+-------------------------------------------------------------------------------
+function draw.getCenterY()
+    return conf.SCREEN_HEIGHT / 2
+end
+
+-------------------------------------------------------------------------------
 function draw.hotkeyOffset( font, text, char )
 	local a, b = string.find( text, char )
 	local pretext = string.sub( text, 1, a )

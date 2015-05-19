@@ -5,7 +5,7 @@ local core = require( BASE .. "core" )
 local style = require( BASE .. "style" )
 
 -------------------------------------------------------------------------------
-function label( state )
+local function label( state )
 	local id, uistate = core.nextId()
 	core.fixRect( state )
 	core.checkRect( id, state )

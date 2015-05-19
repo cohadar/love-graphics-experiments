@@ -26,7 +26,7 @@ local function mouseReleasedOn( id, uistate )
 end
 
 -------------------------------------------------------------------------------
-function flattable( self )
+local function flattable( self )
 	local id, uistate = core.nextId()
 	self.flattable = self.flattable or uistate
 

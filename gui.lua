@@ -12,29 +12,21 @@ local textfiled_a = { text = "Default Text", x = 230, y = 20, w = 200, h = 20 }
 
 local dialog_title = { 
 	text = "Dialog Title", 
-	x = 50, y = 20
 }
 local button_a = { 
 	text = "Hello", 
-	x = 50, y = 50
 }
 local button_b = { 
 	text = "World", 
-	x = 90, y = 80
 }
 local button_c = { 
 	text = "Kukuruz Bre", 
-	x = 100, y = 130
 }
-local hline = {
-	y = 50,
-	align = "center",
-	spacing = 5,
-	elements = { button_a, button_b }
-}
+
 local dialog_abc = {
 	elements = { dialog_title, button_a, button_b, button_c }
 }
+
 local flatt = {
 	x = 500, y = 20, 
 	flattable = dialog_abc
@@ -44,7 +36,7 @@ local flatt = {
 function gui.draw()
 	imgui.dialog( dialog_abc )
 	imgui.label( dialog_title )
-	imgui.hline( hline )
+	--imgui.vline( vline )
 	if imgui.button( button_a ) then
 		text.print( "a" )
 	end
@@ -54,6 +46,11 @@ function gui.draw()
 	if imgui.button( button_c ) then
 		text.print( "c" )
 	end
+	-- making of centered dialog
+	imgui.group.v_align( dialog_abc.elements, "center" )
+	imgui.group.v_distribute( dialog_abc.elements, 5 )
+	imgui.group.stretch_w( dialog_abc.elements )
+	imgui.group.center_on_screen( dialog_abc.elements )
 
 	imgui.flattable( flatt )
 	imgui.printState{ x = 5, y = 180 }
