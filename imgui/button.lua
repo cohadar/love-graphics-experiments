@@ -26,13 +26,13 @@ local function mouseReleasedOn( id, uistate )
 end
 
 -------------------------------------------------------------------------------
-function button( text, rect )
+function button( state )
 	local id, uistate = core.nextId()
 
-	core.fixRect( rect )
-	core.checkRect( id, rect )
+	core.fixRect( state )
+	core.checkRect( id, state )
 
-	style.drawButton( rect, core.getMods( id ), text )
+	style.drawButton( state, core.getMods( id ) )
 
 	-- TODO: set active mod when button used via keyboard
 	return keyboardOn( id, uistate ) or mouseReleasedOn( id, uistate )

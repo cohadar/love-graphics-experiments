@@ -66,38 +66,38 @@ local function drawFocus( x, y, w, h )
 end
 
 -------------------------------------------------------------------------------
-function style.drawButton( rect, mods, text )	
+function style.drawButton( state, mods )	
 	-- draw background
 	setWidgetColor( mods )
-	draw.rect( rect )
+	draw.rect( state )
 	-- draw border
 	setBorderColor( mods )
-	draw.border( rect )
+	draw.border( state )
 	if mods.focus then
-		drawFocus( rect )
+		drawFocus( state )
 	end	
 	-- adjust sizes
 	local X_PADDING = 4
 	local Y_PADDING = 2
 	draw.setDefaultFont()
-	if rect.adjust_w then
-		rect.adjust_w = false
-		rect.w = draw.getTextWidth( text ) + X_PADDING * 2
+	if state.adjust_w then
+		state.adjust_w = false
+		state.w = draw.getTextWidth( state.text ) + X_PADDING * 2
 	end
-	if rect.adjust_h then
-		rect.adjust_h = false
-		rect.h = draw.getFontHeight( text ) + Y_PADDING * 2
+	if state.adjust_h then
+		state.adjust_h = false
+		state.h = draw.getFontHeight( state.text ) + Y_PADDING * 2
 	end	
 	-- draw text
 	setTextColor( mods )
-	draw.print( text, rect.x + X_PADDING, rect.y + Y_PADDING )
+	draw.print( state.text, state.x + X_PADDING, state.y + Y_PADDING )
 end
 
 -------------------------------------------------------------------------------
-function style.drawLabel( rect, mods, text )
+function style.drawLabel( state, mods )
 	draw.setDefaultFont()
 	draw.color( colors.text )
-	draw.print( text, rect.x + 4, rect.y + 2 )
+	draw.print( state.text, state.x + 4, state.y + 2 )
 end
 
 -------------------------------------------------------------------------------

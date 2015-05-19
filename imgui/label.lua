@@ -5,11 +5,11 @@ local core = require( BASE .. "core" )
 local style = require( BASE .. "style" )
 
 -------------------------------------------------------------------------------
-function label( text, rect )
+function label( state )
 	local id, uistate = core.nextId()
-	core.fixRect( rect )
-	core.checkRect( id, rect )
-	style.drawLabel( rect, core.getMods( id ), text )
+	core.fixRect( state )
+	core.checkRect( id, state )
+	style.drawLabel( state, core.getMods( id ) )
 end
 
 -------------------------------------------------------------------------------
