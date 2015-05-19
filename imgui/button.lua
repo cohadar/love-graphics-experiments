@@ -29,7 +29,7 @@ end
 function button( text, rect )
 	local id, uistate = core.nextId()
 
-	rect = core.fixRect( id, rect )
+	core.fixRect( rect )
 	core.checkRect( id, rect )
 
 	style.drawButton( rect, core.getMods( id ), text )

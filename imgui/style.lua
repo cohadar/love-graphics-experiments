@@ -102,6 +102,13 @@ end
 
 -------------------------------------------------------------------------------
 function style.drawDialog( rect, mods )
+	-- add border padding
+	if rect.iteration == 2 then
+		rect.x = rect.x - 5
+		rect.y = rect.y - 5 
+		rect.w = rect.w + 10
+		rect.h = rect.h + 10
+	end			
 	-- draw background	
 	draw.setDefaultFont()
 	setWidgetColor( mods )

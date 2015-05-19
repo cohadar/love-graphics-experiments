@@ -36,62 +36,23 @@ function core.nextId()
 end
 
 -------------------------------------------------------------------------------
-local _stack = {}
-
--------------------------------------------------------------------------------
-function core.push( data )
-	table.insert( _stack, data )
-end
-
--------------------------------------------------------------------------------
-function core.pop()
-	assert( #_stack > 0, "pop on empty stack" )
-	return table.remove( _stack )
-end
-
--------------------------------------------------------------------------------
-local function top()
-	return _stack[ #_stack ]
-end
-
--------------------------------------------------------------------------------
-local _rects = {}
-
--------------------------------------------------------------------------------
-function core.fixRect( id, rect ) 
-	if _rects[ id ] == nil then
-		if rect == nil then
-			_rects[ id ] = { x = nil, y = nil, w = nil, h = nil }
-		else
-			_rects[ id ] = { x = rect.x, y = rect.y, w = rect.w, h = rect.h }
-		end
+local function fixParentRect( parent, child )
+	if parent.adjust_x then
+		parent.adjust_x = false
+		parent.x = child.x
 	end
-	if _rects[ id ].x == nil then
-		_rects[ id ].x = 0
-		_rects[ id ].adjust_x = true
+	if parent.adjust_y then
+		parent.adjust_y = false
+		parent.y = child.y
 	end
-	if _rects[ id ].y == nil then
-		_rects[ id ].y = 0
-		_rects[ id ].adjust_y = true
-	end		
-	if _rects[ id ].w == nil then
-		_rects[ id ].w = 0
-		_rects[ id ].adjust_w = true
+	if parent.adjust_w then
+		parent.adjust_w = false
+		parent.w = child.w
 	end
-	if _rects[ id ].h == nil then
-		_rects[ id ].h = 0
-		_rects[ id ].adjust_h = true
-	end	
-	return _rects[ id ]
-end
-
--------------------------------------------------------------------------------
-local function expandParentRect( parent, child )
-	parent.x = parent.x or child.x
-	parent.y = parent.y or child.y
-	parent.w = parent.w or child.w
-	parent.h = parent.h or child.h
-	
+	if parent.adjust_h then
+		parent.adjust_h = false
+		parent.h = child.h
+	end
 	if child.x < parent.x then
 		parent.x = child.x
 	end
@@ -103,6 +64,29 @@ local function expandParentRect( parent, child )
 	end
 	if child.y + child.h > parent.y + parent.h then
 		parent.h = child.y + child.h - parent.y
+	end
+end
+
+-------------------------------------------------------------------------------
+function core.fixRect( rect ) 
+	if rect.x == nil then
+		rect.x = 0
+		rect.adjust_x = true
+	end
+	if rect.y == nil then
+		rect.y = 0
+		rect.adjust_y = true
+	end		
+	if rect.w == nil then
+		rect.w = 0
+		rect.adjust_w = true
+	end
+	if rect.h == nil then
+		rect.h = 0
+		rect.adjust_h = true
+	end	
+	if rect.parent then
+		fixParentRect( rect.parent, rect )
 	end
 end
 
@@ -128,9 +112,6 @@ function core.checkRect( id, rect )
 		if uistate.mousedown and uistate.activeitem == 0 then
 	  		uistate.activeitem = id
 	  	end
-	end
-	if top() ~= nil then
-		expandParentRect( top(), rect )
 	end
 end 
 

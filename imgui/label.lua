@@ -7,7 +7,7 @@ local style = require( BASE .. "style" )
 -------------------------------------------------------------------------------
 function label( text, rect )
 	local id, uistate = core.nextId()
-	rect = core.fixRect( id, rect )
+	core.fixRect( rect )
 	core.checkRect( id, rect )
 	style.drawLabel( rect, core.getMods( id ), text )
 end
