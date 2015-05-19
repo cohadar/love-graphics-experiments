@@ -28,6 +28,11 @@ local _tick = 0
 local FPS = 60
 
 -------------------------------------------------------------------------------
+function core.getTick()
+	return _tick
+end
+
+-------------------------------------------------------------------------------
 -- Returns widget id and current uistate, call in every widget
 -------------------------------------------------------------------------------
 function core.nextId()
@@ -64,6 +69,9 @@ local function fixParentRect( parent, child )
 	end
 	if child.y + child.h > parent.y + parent.h then
 		parent.h = child.y + child.h - parent.y
+	end
+	if parent.adjust_child then
+		parent.adjust_child( parent, child )
 	end
 end
 

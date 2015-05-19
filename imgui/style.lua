@@ -94,9 +94,9 @@ function style.drawButton( state, mods )
 end
 
 -------------------------------------------------------------------------------
-function style.hbox( state, mods )	
+function style.hline( state )	
 	-- draw border
-	setBorderColor( mods )
+	draw.color( colors.border )
 	draw.border( state )
 end
 

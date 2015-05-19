@@ -27,16 +27,16 @@ local function mouseReleasedOn( id, uistate )
 end
 
 -------------------------------------------------------------------------------
--- rect.iteration is used by style.drawDialog for delayed resize & draw
+-- self.iteration is used by style.drawDialog for delayed resize & draw
 -- that way dialog size can dynamically adjust to its content
 -------------------------------------------------------------------------------
-function dialog( rect )
+function dialog( self )
 	local id, uistate = core.nextId()
-	core.fixRect( rect )
-	rect.iteration = rect.iteration or 0	
-	style.drawDialog( rect, core.getMods( id ) )
-	if rect.iteration < 10 then
-		rect.iteration = rect.iteration + 1
+	core.fixRect( self )
+	self.iteration = self.iteration or 0	
+	style.drawDialog( self, core.getMods( id ) )
+	if self.iteration < 10 then
+		self.iteration = self.iteration + 1
 	end	
 end
 

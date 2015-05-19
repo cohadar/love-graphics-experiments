@@ -17,36 +17,37 @@ local dialog_title = {
 	x = 50, y = 20, 
 	parent = dialog_abc 
 }
-local hbox = {
-	x = 50, y = 50,
-	align = "right",
-	parent = dialog_abc
-}
 local button_a = { 
 	text = "Hello", 
 	x = 50, y = 50, 
-	parent = hbox 
+	parent = dialog_abc 
 }
 local button_b = { 
 	text = "World", 
 	x = 90, y = 80, 
-	parent = hbox 
+	parent = dialog_abc 
 }
 local button_c = { 
 	text = "Kukuruz Bre", 
 	x = 100, y = 130, 
 	parent = dialog_abc 
 }
+local hline = {
+	y = 50,
+	align = "center",
+	elements = { button_a, button_b }
+}
 local flatt = {
 	x = 500, y = 20, 
-	flattable = dialog_abc
+	flattable = hline
 }
+
 
 -------------------------------------------------------------------------------
 function gui.draw()
 	imgui.dialog( dialog_abc )
 	imgui.label( dialog_title )
-	imgui.hbox( hbox )
+	imgui.hline( hline )
 	if imgui.button( button_a ) then
 		text.print( "a" )
 	end
