@@ -164,29 +164,29 @@ function style.drawSlider( self, mods )
 end
 
 -------------------------------------------------------------------------------
-function style.drawLuaTable( rect, mods, luaTable )
+function style.drawFlatTable( self, mods )
 	draw.setDefaultFont()
 	local count = 0
 	local maxlen = 0
-	for key, value in pairs( luaTable ) do
+	for key, value in pairs( self.flattable ) do
 		count = count + 1
 		local lineLen = draw.getTextWidth( key .. " = " .. tostring( value ) )
 		maxlen = math.max( maxlen, lineLen )
 	end		
 	local fontHeight = draw.getFontHeight()
-	rect.w = math.max( rect.w, maxlen + 10 )
-	rect.h = math.max( rect.h, count * fontHeight )
+	self.w = math.max( self.w, maxlen + 10 )
+	self.h = math.max( self.h, count * fontHeight )
 	setWidgetColor( mods )
-	draw.rect( rect )
+	draw.rect( self )
 	setBorderColor( mods )
-	draw.border( rect )	
+	draw.border( self )	
 	setTextColor( mods )
 	function p( x, y, key, value )
 		draw.print( key .. " = " .. tostring( value ) , x + 5, y )
 	end
-	y = rect.y
-	for key, value in pairs( luaTable ) do
-		p( rect.x, y, key, value )
+	y = self.y
+	for key, value in pairs( self.flattable ) do
+		p( self.x, y, key, value )
 		y = y + fontHeight
 	end	
 end

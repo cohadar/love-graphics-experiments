@@ -10,7 +10,7 @@ imgui.label      = require( BASE .. "label" )
 imgui.button     = require( BASE .. "button" )
 imgui.slider     = require( BASE .. "slider" )
 imgui.textfield  = require( BASE .. "textfield" )
-imgui.luatable   = require( BASE .. "luatable" )
+imgui.flattable  = require( BASE .. "flattable" )
 imgui.dialog     = require( BASE .. "dialog" )
 imgui.prepare    = core.prepare
 imgui.finish     = core.finish
@@ -24,7 +24,7 @@ imgui.textinput     = core.textinput
 -------------------------------------------------------------------------------
 function imgui.printState( rect )
 	-- if no table is specified it defaults to uistate
-	return imgui.luatable( rect )
+	return imgui.flattable( rect )
 end
 
 -------------------------------------------------------------------------------

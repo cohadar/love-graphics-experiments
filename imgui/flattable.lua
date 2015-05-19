@@ -1,4 +1,4 @@
---- @module luatable
+--- @module flattable
 
 local BASE = (...):match("(.-)[^%.]+$")
 local core = require( BASE .. "core" )
@@ -26,17 +26,18 @@ local function mouseReleasedOn( id, uistate )
 end
 
 -------------------------------------------------------------------------------
-function luatable( rect, table )
+function flattable( self )
 	local id, uistate = core.nextId()
-	table = table or uistate
+	self.flattable = self.flattable or uistate
 
-	rect = { x = rect.x, y = rect.y, w = rect.w or 0, h = rect.h or 0 }
-	core.checkRect( id, rect )
+	self.w = self.w or 0
+	self.h = self.h or 0
+	core.checkRect( id, self )
 
-	style.drawLuaTable( rect, core.getMods( id ), table )
+	style.drawFlatTable( self, core.getMods( id ) )
 
 	return false
 end
 
 -------------------------------------------------------------------------------
-return luatable
+return flattable
