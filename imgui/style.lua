@@ -94,6 +94,13 @@ function style.drawButton( state, mods )
 end
 
 -------------------------------------------------------------------------------
+function style.hbox( state, mods )	
+	-- draw border
+	setBorderColor( mods )
+	draw.border( state )
+end
+
+-------------------------------------------------------------------------------
 function style.drawLabel( state, mods )
 	draw.setDefaultFont()
 	draw.color( colors.text )

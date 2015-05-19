@@ -12,6 +12,7 @@ imgui.slider     = require( BASE .. "slider" )
 imgui.textfield  = require( BASE .. "textfield" )
 imgui.flattable  = require( BASE .. "flattable" )
 imgui.dialog     = require( BASE .. "dialog" )
+imgui.hbox       = require( BASE .. "hbox" )
 imgui.prepare    = core.prepare
 imgui.finish     = core.finish
 imgui.mousemoved = core.mousemoved

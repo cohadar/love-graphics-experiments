@@ -11,20 +11,26 @@ local slider_a = { value = 0, size = 256, x = 200, y = 20, w = 20, h = 200 }
 local textfiled_a = { text = "Default Text", x = 230, y = 20, w = 200, h = 20 }
 
 local dialog_abc = {}
+
 local dialog_title = { 
 	text = "Dialog Title", 
 	x = 50, y = 20, 
 	parent = dialog_abc 
 }
+local hbox = {
+	x = 50, y = 50,
+	align = "right",
+	parent = dialog_abc
+}
 local button_a = { 
 	text = "Hello", 
 	x = 50, y = 50, 
-	parent = dialog_abc 
+	parent = hbox 
 }
 local button_b = { 
 	text = "World", 
 	x = 90, y = 80, 
-	parent = dialog_abc 
+	parent = hbox 
 }
 local button_c = { 
 	text = "Kukuruz Bre", 
@@ -40,6 +46,7 @@ local flatt = {
 function gui.draw()
 	imgui.dialog( dialog_abc )
 	imgui.label( dialog_title )
+	imgui.hbox( hbox )
 	if imgui.button( button_a ) then
 		text.print( "a" )
 	end
