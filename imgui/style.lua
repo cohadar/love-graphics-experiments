@@ -118,22 +118,22 @@ function style.drawDialog( rect, mods )
 end
 
 -------------------------------------------------------------------------------
-function style.drawTextField( rect, mods, text )
+function style.drawTextField( self, mods )
 	setWidgetColor( mods )
-	draw.rect( rect )
+	draw.rect( self )
 	setBorderColor( mods )
-	draw.border( rect )	
+	draw.border( self )	
 	if mods.focus then
-		drawFocus( rect )
+		drawFocus( self )
 	end	
 	setTextColor( mods )
-	draw.setInputFont( rect.h - 4 )
+	draw.setInputFont( self.h - 4 )
 	local char_width = draw.getFontEm()
-	draw.print( text, rect.x + 2, rect.y + 2 )
+	draw.print( self.text, self.x + 2, self.y + 2 )
 	-- render cursor if we have keyboard focus
-	local len = string.len( text )
+	local len = string.len( self.text )
   	if mods.focus and mods.tick > 30 then
-    	draw.print( "_", rect.x + len * char_width, rect.y )
+    	draw.print( "_", self.x + len * char_width, self.y )
     end
 end
 

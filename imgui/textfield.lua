@@ -15,33 +15,34 @@ local function mouseReleasedOn( id, uistate )
 end
 
 -------------------------------------------------------------------------------
-local function keyboardOn( id, uistate, buffer )
+local function keyboardOn( self, id, uistate )
 	if core.hasKeyboardFocus( id ) then
 		if uistate.keyentered == "backspace" then
 			uistate.keyentered = 0			
-			return true, string.sub( buffer, 1, string.len( buffer ) - 1 )
+			self.text = string.sub( self.text, 1, string.len( self.text ) - 1 )
+			return true
 		elseif uistate.keychar ~= 0 then
-			buffer = buffer .. uistate.keychar
+			self.text = self.text .. uistate.keychar
 			uistate.keychar = 0
-			return true, buffer
+			return true
 		end
 	end
-	return false, buffer
+	return false
 end
 
 -------------------------------------------------------------------------------
-function textfield( buffer, rect )
+function textfield( self )
 	local id, uistate = core.nextId()
 
-	core.checkRect( id, rect )
+	core.checkRect( id, self )
 
-	style.drawTextField( rect, core.getMods( id ), buffer )
+	style.drawTextField( self, core.getMods( id ) )
 
 	if mouseReleasedOn( id, uistate ) then
 		uistate.kbditem = id
 	end
 
-	return keyboardOn( id, uistate, buffer )
+	return keyboardOn( self, id, uistate )
 end
 
 
