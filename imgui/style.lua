@@ -4,8 +4,8 @@
 -------------------------------------------------------------------------------
 --- @module style
 local style = {}
-
-local draw = require "draw"
+local font = require "font"
+local rgb = require "rgb"
 
 -------------------------------------------------------------------------------
 local colors = {
@@ -23,36 +23,73 @@ local colors = {
 }
 
 -------------------------------------------------------------------------------
+function style.getfont( state )
+	return font.get( state.font or "default", state.font_size ) 	
+end
+
+-------------------------------------------------------------------------------
+function style.setfont( state )
+	return font.set( state.font or "default", state.font_size ) 	
+end
+
+-------------------------------------------------------------------------------
+function style.color( name, alpha )
+	local color = rgb[ name ]
+	if color then
+		love.graphics.setColor( color.r, color.g, color.b, alpha )
+	else
+		error( "bad color name: " .. name )
+	end
+end
+
+-------------------------------------------------------------------------------
 local function setWidgetColor( mods )
 	if mods.active then
-		draw.color( colors.active_widget )
+		style.color( colors.active_widget )
 	elseif mods.hot then
-		draw.color( colors.hot_widget )
+		style.color( colors.hot_widget )
 	else
-		draw.color( colors.widget )
+		style.color( colors.widget )
 	end
 end
 
 -------------------------------------------------------------------------------
 local function setBorderColor( mods )
 	if mods.active then
-		draw.color( colors.active_border )
+		style.color( colors.active_border )
 	elseif mods.hot then
-		draw.color( colors.hot_border )
+		style.color( colors.hot_border )
 	else
-		draw.color( colors.border )
+		style.color( colors.border )
 	end
 end
 
 -------------------------------------------------------------------------------
 local function setTextColor( mods )
 	if mods.active then
-		draw.color( colors.active_text )
+		style.color( colors.active_text )
 	elseif mods.hot then
-		draw.color( colors.hot_text )
+		style.color( colors.hot_text )
 	else
-		draw.color( colors.text )
+		style.color( colors.text )
 	end
+end
+
+-------------------------------------------------------------------------------
+local function drawRect( x, y, w, h )
+	if type( x ) == "table" then
+		x, y, w, h = x.x, x.y, x.w, x.h
+	end 
+	love.graphics.rectangle( "fill", x, y, w, h )
+end
+
+-------------------------------------------------------------------------------
+local function drawBorder( x, y, w, h )
+	if type( x ) == "table" then
+		x, y, w, h = x.x, x.y, x.w, x.h
+	end 
+	-- we add 0.5 for pixel centering
+	love.graphics.rectangle( "line", x + 0.5, y + 0.5, w, h )
 end
 
 -------------------------------------------------------------------------------
@@ -60,88 +97,75 @@ local function drawFocus( x, y, w, h )
 	if type( x ) == "table" then
 		x, y, w, h = x.x, x.y, x.w, x.h
 	end 	
-	draw.color( colors.focus_border )
-	draw.border( x - 1, y - 1, w + 2, h + 2 )
-	draw.border( x - 2, y - 2, w + 4, h + 4 )
+	style.color( colors.focus_border )
+	drawBorder( x - 1, y - 1, w + 2, h + 2 )
+	drawBorder( x - 2, y - 2, w + 4, h + 4 )
 end
 
 -------------------------------------------------------------------------------
 function style.button( state, mods )	
 	-- draw background
 	setWidgetColor( mods )
-	draw.rect( state )
+	drawRect( state )
 	-- draw border
 	setBorderColor( mods )
-	draw.border( state )
+	drawBorder( state )
 	if mods.focus then
 		drawFocus( state )
 	end	
 	-- adjust sizes
 	local X_PADDING = 4
 	local Y_PADDING = 2
-	draw.setDefaultFont()
+	local f = style.setfont( state )
 	if state.adjust_w then
 		state.adjust_w = false
-		state.w = draw.getTextWidth( state.text ) + X_PADDING * 2
+		state.w = f:getWidth( state.text ) + X_PADDING * 2
 	end
 	if state.adjust_h then
 		state.adjust_h = false
-		state.h = draw.getFontHeight( state.text ) + Y_PADDING * 2
+		state.h = f:getHeight( state.text ) + Y_PADDING * 2
 	end	
 	-- draw text
 	setTextColor( mods )
-	draw.print( state.text, state.x + X_PADDING, state.y + Y_PADDING )
-end
-
--------------------------------------------------------------------------------
-function style.hline( state )	
-	draw.color( colors.border )
-	draw.hline( state.y )
-end
-
--------------------------------------------------------------------------------
-function style.vline( state )	
-	draw.color( colors.border )
-	draw.vline( state.x )
+	love.graphics.print( state.text, state.x + X_PADDING, state.y + Y_PADDING )
 end
 
 -------------------------------------------------------------------------------
 function style.getCenterX()	
-	return draw.getCenterX()
+	return love.graphics.getWidth() / 2
 end
 
 -------------------------------------------------------------------------------
 function style.getCenterY()	
-	return draw.getCenterY()
+	return love.graphics.getHeight() / 2
 end
 
 -------------------------------------------------------------------------------
 function style.label( state, mods )
-	draw.setDefaultFont()
+	local f = style.setfont( state )
 	-- adjust sizes
 	local X_PADDING = 4
 	local Y_PADDING = 2
-	draw.setDefaultFont()
 	if state.adjust_w then
 		state.adjust_w = false
-		state.w = draw.getTextWidth( state.text ) + X_PADDING * 2
+		state.w = f:getWidth( state.text ) + X_PADDING * 2
 	end
 	if state.adjust_h then
 		state.adjust_h = false
-		state.h = draw.getFontHeight( state.text ) + Y_PADDING * 2
+		state.h = f:getHeight( state.text ) + Y_PADDING * 2
 	end	
 	-- draw label	
-	draw.color( colors.text )
-	draw.print( state.text, state.x + 4, state.y + 2 )
+	style.color( colors.text )
+	love.graphics.print( state.text, state.x + 4, state.y + 2 )
 end
 
 -------------------------------------------------------------------------------
 function style.dialog( rect, mods )	
-	draw.setDefaultFont()
+	style.setfont( rect )
 	setWidgetColor( mods )
-	draw.rect( rect )
+	drawRect( rect )
 	setBorderColor( mods )
-	draw.border( rect )
+	drawBorder( rect )
 end
 
 -------------------------------------------------------------------------------
@@ -149,21 +173,21 @@ function style.textfield( self, mods )
 	-- adjust sizes
 	local X_PADDING = 4
 	local Y_PADDING = 2
-	draw.setInputFont()
-	local em = draw.getFontEm()
+	local f = style.setfont( self )
+	local em = f:getWidth( "M" )
 	if self.adjust_w then
 		self.adjust_w = false
 		self.w = self.columns * em + X_PADDING * 2
 	end
 	if self.adjust_h then
 		self.adjust_h = false
-		self.h = draw.getFontHeight() + Y_PADDING * 2
+		self.h = f:getHeight() + Y_PADDING * 2
 	end	
 	-- draw background
 	setWidgetColor( mods )
-	draw.rect( self )
+	drawRect( self )
 	setBorderColor( mods )
-	draw.border( self )	
+	drawBorder( self )	
 	if mods.focus then
 		drawFocus( self )
 	end	
@@ -174,10 +198,10 @@ function style.textfield( self, mods )
 	if len > self.columns then
 		displaytext = "…" .. string.sub( self.text, len - self.columns + 2, len )
 	end
-	draw.print( displaytext, self.x + 2, self.y + 2 )
+	love.graphics.print( displaytext, self.x + 2, self.y + 2 )
 	-- render cursor if we have keyboard focus
   	if mods.focus and mods.tick > 30 then
-    	draw.print( "|", self.x + math.min( len, self.columns ) * em, self.y )
+    	love.graphics.print( "|", self.x + math.min( len, self.columns ) * em, self.y )
     end	
 end
 
@@ -190,18 +214,18 @@ function style.slider( self, mods )
 	local DX = ( HEAD_SIZE - SPINE_WIDTH ) / 2
 	-- draw slider spine
 	setWidgetColor( mods )
-	draw.rect( self.x + DX, self.y, SPINE_WIDTH, self.h )
+	drawRect( self.x + DX, self.y, SPINE_WIDTH, self.h )
 	setBorderColor( mods )
-	draw.border( self.x + DX, self.y, SPINE_WIDTH, self.h )
+	drawBorder( self.x + DX, self.y, SPINE_WIDTH, self.h )
 	if mods.focus then
 		drawFocus( self.x + DX, self.y, SPINE_WIDTH, self.h )
 	end	
 	-- draw slider head
 	local dy = ( self.h - HEAD_SIZE ) * self.percent
 	setWidgetColor( mods )
-	draw.rect( self.x, self.y + dy, HEAD_SIZE, HEAD_SIZE )
+	drawRect( self.x, self.y + dy, HEAD_SIZE, HEAD_SIZE )
 	setBorderColor( mods )
-	draw.border( self.x, self.y + dy, HEAD_SIZE, HEAD_SIZE )
+	drawBorder( self.x, self.y + dy, HEAD_SIZE, HEAD_SIZE )
 	if mods.focus then
 		drawFocus( self.x, self.y + dy, HEAD_SIZE, HEAD_SIZE )
 	end		
@@ -209,24 +233,24 @@ end
 
 -------------------------------------------------------------------------------
 function style.flattable( self, mods )
-	draw.setDefaultFont()
+	local f = style.setfont( self )
 	local count = 0
 	local maxlen = 0
 	for key, value in pairs( self.flattable ) do
 		count = count + 1
-		local lineLen = draw.getTextWidth( key .. " = " .. tostring( value ) )
+		local lineLen = f:getWidth( key .. " = " .. tostring( value ) )
 		maxlen = math.max( maxlen, lineLen )
 	end		
-	local fontHeight = draw.getFontHeight()
+	local fontHeight = f:getHeight()
 	self.w = math.max( self.w, maxlen + 10 )
 	self.h = math.max( self.h, count * fontHeight )
 	setWidgetColor( mods )
-	draw.rect( self )
+	drawRect( self )
 	setBorderColor( mods )
-	draw.border( self )	
+	drawBorder( self )	
 	setTextColor( mods )
 	function p( x, y, key, value )
-		draw.print( key .. " = " .. tostring( value ) , x + 5, y )
+		love.graphics.print( key .. " = " .. tostring( value ) , x + 5, y )
 	end
 	y = self.y
 	for key, value in pairs( self.flattable ) do

@@ -23,17 +23,23 @@ function font.declare( fontName, fileName, fontSize )
 end
 
 -------------------------------------------------------------------------------
-function font.set( fontName, fontSize )
+function font.get( fontName, fontSize )
 	if _nameMap[ fontName ] == nil then
-		error( ' font never declared: "' .. fontName .. '"' ) 
+		error( ' font not declared: "' .. fontName .. '"' ) 
 	end
 	fontSize = fontSize or _sizeMap[ fontName ] or font.DEFAULT_FONT_SIZE
 	local k = key( fontName, fontSize )
 	if _fontCache[ k ] == nil then
 		_fontCache[ k ] = love.graphics.newFont( _nameMap[ fontName ], fontSize )
 	end
-	love.graphics.setFont( _fontCache[ k ] )
 	return _fontCache[ k ]
+end
+
+-------------------------------------------------------------------------------
+function font.set( fontName, fontSize )
+	local ret = font.get( fontName, fontSize )
+	love.graphics.setFont( ret )
+	return ret
 end
 
 -------------------------------------------------------------------------------

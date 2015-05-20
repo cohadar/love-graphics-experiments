@@ -38,6 +38,7 @@ end
 local function textfield( self )
 	self.columns = self.columns or 30
 	self.max_text_len = self.max_text_len or 60
+	self.font = self.font or "input"
 
 	local id, uistate = core.nextId()
 

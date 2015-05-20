@@ -50,19 +50,6 @@ function draw.hotkeyOffset( font, text, char )
 end
 
 -------------------------------------------------------------------------------
-function draw.alignOffset( box_width, text_width, align )
-	if align == "left" then 
-		return 0
-	elseif align == "right" then
-		return box_width - text_width
-	elseif align == "center" then
-		return ( box_width - text_width ) / 2
-	else
-		error( "unsupported align mode:" .. align )
-	end
-end
-
--------------------------------------------------------------------------------
 function draw.rect( x, y, w, h )
 	if type( x ) == "table" then
 		x, y, w, h = x.x, x.y, x.w, x.h
@@ -80,37 +67,16 @@ function draw.border( x, y, w, h )
 end
 
 -------------------------------------------------------------------------------
-function draw.setDefaultFont( optional_size )
-	_currentFont = font.set( "default", optional_size )
-end
-
--------------------------------------------------------------------------------
-function draw.setInputFont( optional_size )
-	_currentFont = font.set( "input", optional_size )
-end
-
--------------------------------------------------------------------------------
-function draw.getTextWidth( text )
-	if _currentFont == nil then
-		draw.setDefaultFont()
+function draw.alignOffset( box_width, text_width, align )
+	if align == "left" then 
+		return 0
+	elseif align == "right" then
+		return box_width - text_width
+	elseif align == "center" then
+		return ( box_width - text_width ) / 2
+	else
+		error( "unsupported align mode:" .. align )
 	end
-	return _currentFont:getWidth( text )
-end
-
--------------------------------------------------------------------------------
-function draw.getFontHeight()
-	if _currentFont == nil then
-		draw.setDefaultFont()
-	end
-	return _currentFont:getHeight()
-end
-
--------------------------------------------------------------------------------
-function draw.getFontEm()
-	if _currentFont == nil then
-		draw.setDefaultFont()
-	end
-	return _currentFont:getWidth( "M" )
 end
 
 -------------------------------------------------------------------------------
