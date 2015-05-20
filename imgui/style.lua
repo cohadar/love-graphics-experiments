@@ -146,6 +146,20 @@ end
 
 -------------------------------------------------------------------------------
 function style.textfield( self, mods )
+	-- adjust sizes
+	local X_PADDING = 4
+	local Y_PADDING = 2
+	draw.setInputFont()
+	local em = draw.getFontEm()
+	if self.adjust_w then
+		self.adjust_w = false
+		self.w = self.columns * em + X_PADDING * 2
+	end
+	if self.adjust_h then
+		self.adjust_h = false
+		self.h = draw.getFontHeight() + Y_PADDING * 2
+	end	
+	-- draw background
 	setWidgetColor( mods )
 	draw.rect( self )
 	setBorderColor( mods )
@@ -153,15 +167,18 @@ function style.textfield( self, mods )
 	if mods.focus then
 		drawFocus( self )
 	end	
-	setTextColor( mods )
-	draw.setInputFont( self.h - 4 )
-	local char_width = draw.getFontEm()
-	draw.print( self.text, self.x + 2, self.y + 2 )
-	-- render cursor if we have keyboard focus
+	-- draw text
 	local len = string.len( self.text )
+	setTextColor( mods )
+	local displaytext = self.text
+	if len > self.columns then
+		displaytext = "…" .. string.sub( self.text, len - self.columns + 2, len )
+	end
+	draw.print( displaytext, self.x + 2, self.y + 2 )
+	-- render cursor if we have keyboard focus
   	if mods.focus and mods.tick > 30 then
-    	draw.print( "_", self.x + len * char_width, self.y )
-    end
+    	draw.print( "|", self.x + math.min( len, self.columns ) * em, self.y )
+    end	
 end
 
 -------------------------------------------------------------------------------
@@ -216,6 +233,10 @@ function style.flattable( self, mods )
 		p( self.x, y, key, value )
 		y = y + fontHeight
 	end	
+end
+
+-------------------------------------------------------------------------------
+function style.beep()
 end
 
 -------------------------------------------------------------------------------

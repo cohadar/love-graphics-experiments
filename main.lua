@@ -43,7 +43,7 @@ end
 -------------------------------------------------------------------------------
 function love.draw()
 	love.graphics.scale( conf.SCALE_GRAPHICS )
-	junk.drawText()
+	--junk.drawText()
 
 	imgui.prepare()
 
@@ -51,8 +51,6 @@ function love.draw()
 
 	imgui.finish()
 
-	--font.set( "default", 24 )
-	--love.graphics.print( "The Quick Brown Fox Jumps Over a Lazy Dog.", 100, 300 )
 	text.draw()
 end
 

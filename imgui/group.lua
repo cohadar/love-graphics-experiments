@@ -95,7 +95,7 @@ function group.get_center( elements )
 end
 
 -------------------------------------------------------------------------------
--- center group on screen center
+-- centers whole group on screen; preserves element distances 
 -------------------------------------------------------------------------------
 function group.center_on_screen( elements )
 	local sx, sy = style.getCenterX(), style.getCenterY()

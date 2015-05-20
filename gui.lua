@@ -8,7 +8,7 @@ local font = require "font"
 
 local slider_a = { value = 0, size = 256, x = 200, y = 20, w = 20, h = 200 }
 
-local textfiled_a = { text = "Default Text", x = 230, y = 20, w = 200, h = 20 }
+local textfiled_a = { text = "Default Text", x = 230, y = 20 }
 
 local dialog_title = { 
 	text = "Dialog Title", 
@@ -59,6 +59,7 @@ function gui.draw()
 
 	font.set( "default", 32 )
 	love.graphics.print( slider_a.value, 220, 100 )
+	love.graphics.print( "M…W…M…W", 220, 200 )
 end
 
 -------------------------------------------------------------------------------

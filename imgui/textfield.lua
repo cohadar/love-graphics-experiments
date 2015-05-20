@@ -22,7 +22,11 @@ local function keyboardOn( self, id, uistate )
 			self.text = string.sub( self.text, 1, string.len( self.text ) - 1 )
 			return true
 		elseif uistate.keychar ~= 0 then
-			self.text = self.text .. uistate.keychar
+			if string.len( self.text ) < self.max_text_len then
+				self.text = self.text .. uistate.keychar
+			else
+				style.beep()
+			end
 			uistate.keychar = 0
 			return true
 		end
@@ -32,8 +36,12 @@ end
 
 -------------------------------------------------------------------------------
 local function textfield( self )
+	self.columns = self.columns or 30
+	self.max_text_len = self.max_text_len or 60
+
 	local id, uistate = core.nextId()
 
+	core.fixRect( self )
 	core.checkRect( id, self )
 
 	style.textfield( self, core.getMods( id ) )
