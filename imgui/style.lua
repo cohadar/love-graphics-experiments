@@ -22,18 +22,12 @@ local colors = {
 	focus_border = "orange",
 }
 
--------------------------------------------------------------------------------
-function style.getfont( state )
-	return font.get( state.font or "default", state.font_size ) 	
-end
+--=============================================================================
+-- PRIVATE
+--=============================================================================
 
 -------------------------------------------------------------------------------
-function style.setfont( state )
-	return font.set( state.font or "default", state.font_size ) 	
-end
-
--------------------------------------------------------------------------------
-function style.color( name, alpha )
+local function setColor( name, alpha )
 	local color = rgb[ name ]
 	if color then
 		love.graphics.setColor( color.r, color.g, color.b, alpha )
@@ -45,33 +39,33 @@ end
 -------------------------------------------------------------------------------
 local function setWidgetColor( mods )
 	if mods.active then
-		style.color( colors.active_widget )
+		setColor( colors.active_widget )
 	elseif mods.hot then
-		style.color( colors.hot_widget )
+		setColor( colors.hot_widget )
 	else
-		style.color( colors.widget )
+		setColor( colors.widget )
 	end
 end
 
 -------------------------------------------------------------------------------
 local function setBorderColor( mods )
 	if mods.active then
-		style.color( colors.active_border )
+		setColor( colors.active_border )
 	elseif mods.hot then
-		style.color( colors.hot_border )
+		setColor( colors.hot_border )
 	else
-		style.color( colors.border )
+		setColor( colors.border )
 	end
 end
 
 -------------------------------------------------------------------------------
 local function setTextColor( mods )
 	if mods.active then
-		style.color( colors.active_text )
+		setColor( colors.active_text )
 	elseif mods.hot then
-		style.color( colors.hot_text )
+		setColor( colors.hot_text )
 	else
-		style.color( colors.text )
+		setColor( colors.text )
 	end
 end
 
@@ -97,9 +91,33 @@ local function drawFocus( x, y, w, h )
 	if type( x ) == "table" then
 		x, y, w, h = x.x, x.y, x.w, x.h
 	end 	
-	style.color( colors.focus_border )
+	setColor( colors.focus_border )
 	drawBorder( x - 1, y - 1, w + 2, h + 2 )
 	drawBorder( x - 2, y - 2, w + 4, h + 4 )
+end
+
+--=============================================================================
+-- PUBLIC
+--=============================================================================
+
+-------------------------------------------------------------------------------
+function style.getFont( state )
+	return font.get( state.font or "default", state.font_size ) 	
+end
+
+-------------------------------------------------------------------------------
+function style.setFont( state )
+	return font.set( state.font or "default", state.font_size ) 	
+end
+
+-------------------------------------------------------------------------------
+function style.getCenterX()	
+	return love.graphics.getWidth() / 2
+end
+
+-------------------------------------------------------------------------------
+function style.getCenterY()	
+	return love.graphics.getHeight() / 2
 end
 
 -------------------------------------------------------------------------------
@@ -116,7 +134,7 @@ function style.button( state, mods )
 	-- adjust sizes
 	local X_PADDING = 4
 	local Y_PADDING = 2
-	local f = style.setfont( state )
+	local f = style.setFont( state )
 	if state.adjust_w then
 		state.adjust_w = false
 		state.w = f:getWidth( state.text ) + X_PADDING * 2
@@ -131,18 +149,8 @@ function style.button( state, mods )
 end
 
 -------------------------------------------------------------------------------
-function style.getCenterX()	
-	return love.graphics.getWidth() / 2
-end
-
--------------------------------------------------------------------------------
-function style.getCenterY()	
-	return love.graphics.getHeight() / 2
-end
-
--------------------------------------------------------------------------------
 function style.label( state, mods )
-	local f = style.setfont( state )
+	local f = style.setFont( state )
 	-- adjust sizes
 	local X_PADDING = 4
 	local Y_PADDING = 2
@@ -155,13 +163,13 @@ function style.label( state, mods )
 		state.h = f:getHeight( state.text ) + Y_PADDING * 2
 	end	
 	-- draw label	
-	style.color( colors.text )
+	setColor( colors.text )
 	love.graphics.print( state.text, state.x + 4, state.y + 2 )
 end
 
 -------------------------------------------------------------------------------
 function style.dialog( rect, mods )	
-	style.setfont( rect )
+	style.setFont( rect )
 	setWidgetColor( mods )
 	drawRect( rect )
 	setBorderColor( mods )
@@ -173,7 +181,7 @@ function style.textfield( self, mods )
 	-- adjust sizes
 	local X_PADDING = 4
 	local Y_PADDING = 2
-	local f = style.setfont( self )
+	local f = style.setFont( self )
 	local em = f:getWidth( "M" )
 	if self.adjust_w then
 		self.adjust_w = false
@@ -233,7 +241,7 @@ end
 
 -------------------------------------------------------------------------------
 function style.flattable( self, mods )
-	local f = style.setfont( self )
+	local f = style.setFont( self )
 	local count = 0
 	local maxlen = 0
 	for key, value in pairs( self.flattable ) do
