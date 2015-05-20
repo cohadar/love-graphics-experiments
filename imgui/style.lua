@@ -96,19 +96,32 @@ local function drawFocus( x, y, w, h )
 	drawBorder( x - 2, y - 2, w + 4, h + 4 )
 end
 
+-------------------------------------------------------------------------------
+local function setFont( state )
+	return font.set( state.font or "default", state.font_size ) 	
+end
+
+-------------------------------------------------------------------------------
+local function resizeRectToText( state, columns )
+	state.xpadding = 4
+	state.ypadding = 2
+	local f = setFont( state )
+	local width = f:getWidth( state.text )
+	if columns then
+		state.em = f:getWidth( "M" )
+		width = state.em * columns
+	end
+	if state.w == 0 then
+		state.w = width + state.xpadding * 2
+	end
+	if state.h == 0 then
+		state.h = f:getHeight() + state.ypadding * 2
+	end	
+end
+
 --=============================================================================
 -- PUBLIC
 --=============================================================================
-
--------------------------------------------------------------------------------
-function style.getFont( state )
-	return font.get( state.font or "default", state.font_size ) 	
-end
-
--------------------------------------------------------------------------------
-function style.setFont( state )
-	return font.set( state.font or "default", state.font_size ) 	
-end
 
 -------------------------------------------------------------------------------
 function style.getCenterX()	
@@ -122,6 +135,7 @@ end
 
 -------------------------------------------------------------------------------
 function style.button( state, mods )	
+	resizeRectToText( state )
 	-- draw background
 	setWidgetColor( mods )
 	drawRect( state )
@@ -131,37 +145,14 @@ function style.button( state, mods )
 	if mods.focus then
 		drawFocus( state )
 	end	
-	-- adjust sizes
-	local X_PADDING = 4
-	local Y_PADDING = 2
-	local f = style.setFont( state )
-	if state.adjust_w then
-		state.adjust_w = false
-		state.w = f:getWidth( state.text ) + X_PADDING * 2
-	end
-	if state.adjust_h then
-		state.adjust_h = false
-		state.h = f:getHeight( state.text ) + Y_PADDING * 2
-	end	
 	-- draw text
 	setTextColor( mods )
-	love.graphics.print( state.text, state.x + X_PADDING, state.y + Y_PADDING )
+	love.graphics.print( state.text, state.x + state.xpadding, state.y + state.ypadding )
 end
 
 -------------------------------------------------------------------------------
 function style.label( state, mods )
-	local f = style.setFont( state )
-	-- adjust sizes
-	local X_PADDING = 4
-	local Y_PADDING = 2
-	if state.adjust_w then
-		state.adjust_w = false
-		state.w = f:getWidth( state.text ) + X_PADDING * 2
-	end
-	if state.adjust_h then
-		state.adjust_h = false
-		state.h = f:getHeight( state.text ) + Y_PADDING * 2
-	end	
+	resizeRectToText( state )
 	-- draw label	
 	setColor( colors.text )
 	love.graphics.print( state.text, state.x + 4, state.y + 2 )
@@ -169,7 +160,6 @@ end
 
 -------------------------------------------------------------------------------
 function style.dialog( rect, mods )	
-	style.setFont( rect )
 	setWidgetColor( mods )
 	drawRect( rect )
 	setBorderColor( mods )
@@ -178,19 +168,7 @@ end
 
 -------------------------------------------------------------------------------
 function style.textfield( self, mods )
-	-- adjust sizes
-	local X_PADDING = 4
-	local Y_PADDING = 2
-	local f = style.setFont( self )
-	local em = f:getWidth( "M" )
-	if self.adjust_w then
-		self.adjust_w = false
-		self.w = self.columns * em + X_PADDING * 2
-	end
-	if self.adjust_h then
-		self.adjust_h = false
-		self.h = f:getHeight() + Y_PADDING * 2
-	end	
+	resizeRectToText( self, self.columns )
 	-- draw background
 	setWidgetColor( mods )
 	drawRect( self )
@@ -209,7 +187,7 @@ function style.textfield( self, mods )
 	love.graphics.print( displaytext, self.x + 2, self.y + 2 )
 	-- render cursor if we have keyboard focus
   	if mods.focus and mods.tick > 30 then
-    	love.graphics.print( "|", self.x + math.min( len, self.columns ) * em, self.y )
+    	love.graphics.print( "|", self.x + math.min( len, self.columns ) * self.em, self.y )
     end	
 end
 
@@ -241,7 +219,7 @@ end
 
 -------------------------------------------------------------------------------
 function style.flattable( self, mods )
-	local f = style.setFont( self )
+	local f = setFont( self )
 	local count = 0
 	local maxlen = 0
 	for key, value in pairs( self.flattable ) do

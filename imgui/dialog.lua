@@ -6,20 +6,16 @@ local style = require( BASE .. "style" )
 
 -------------------------------------------------------------------------------
 local function resizeParent( parent, child )
-	if parent.adjust_x then
-		parent.adjust_x = false
+	if parent.x == 0 then
 		parent.x = child.x
 	end
-	if parent.adjust_y then
-		parent.adjust_y = false
+	if parent.y == 0 then
 		parent.y = child.y
 	end
-	if parent.adjust_w then
-		parent.adjust_w = false
+	if parent.w == 0 then
 		parent.w = child.w
 	end
-	if parent.adjust_h then
-		parent.adjust_h = false
+	if parent.h == 0 then
 		parent.h = child.h
 	end
 	if child.x < parent.x then

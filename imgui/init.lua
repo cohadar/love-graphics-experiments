@@ -4,8 +4,6 @@ assert( not BASE:match( '%.init%.$' ), "Invalid require path `"..(...).."' (drop
 
 -------------------------------------------------------------------------------
 imgui = {}
-
-local core       = require( BASE .. "core" )
 imgui.label      = require( BASE .. "label" )
 imgui.button     = require( BASE .. "button" )
 imgui.slider     = require( BASE .. "slider" )
@@ -13,6 +11,7 @@ imgui.textfield  = require( BASE .. "textfield" )
 imgui.flattable  = require( BASE .. "flattable" )
 imgui.dialog     = require( BASE .. "dialog" )
 imgui.group      = require( BASE .. "group" )
+local core       = require( BASE .. "core" )
 imgui.prepare    = core.prepare
 imgui.finish     = core.finish
 imgui.mousemoved = core.mousemoved

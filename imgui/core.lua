@@ -48,22 +48,10 @@ end
 
 -------------------------------------------------------------------------------
 function core.fixRect( rect ) 
-	if rect.x == nil then
-		rect.x = 0
-		rect.adjust_x = true
-	end
-	if rect.y == nil then
-		rect.y = 0
-		rect.adjust_y = true
-	end		
-	if rect.w == nil then
-		rect.w = 0
-		rect.adjust_w = true
-	end
-	if rect.h == nil then
-		rect.h = 0
-		rect.adjust_h = true
-	end	
+	rect.x = rect.x or 0
+	rect.y = rect.y or 0
+	rect.w = rect.w or 0
+	rect.h = rect.h or 0
 	return rect
 end
 
