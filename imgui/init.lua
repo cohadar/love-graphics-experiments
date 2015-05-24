@@ -11,6 +11,7 @@ imgui.textfield  = require( BASE .. "textfield" )
 imgui.flattable  = require( BASE .. "flattable" )
 imgui.dialog     = require( BASE .. "dialog" )
 imgui.group      = require( BASE .. "group" )
+imgui.grid9      = require( BASE .. "grid9" )
 local core       = require( BASE .. "core" )
 imgui.prepare    = core.prepare
 imgui.finish     = core.finish
@@ -29,7 +30,7 @@ end
 
 -------------------------------------------------------------------------------
 function imgui.init()
-	love.keyboard.setKeyRepeat( true )
+	love.keyboard.setKeyRepeat( true )	
 end
 
 -------------------------------------------------------------------------------

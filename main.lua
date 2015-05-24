@@ -38,11 +38,31 @@ function love.load()
 	--font.declare( "input", "fonts/ofl/inconsolata/Inconsolata-Regular.ttf", 14 )
 	font.declare( "input", "fonts/ofl/ptmono/PTM55FT.ttf", 14 )
 	imgui.init()
+	--local image = love.graphics.newImage( fileName )
+	button_grid = imgui.grid9.fromFile( "resources/button.png", 10, 10, 10, 10 )
+	for _, image in pairs(button_grid) do 
+		if image.setFilter then
+			image:setFilter(  "nearest", "nearest" )
+		end
+	end
+	love.graphics.setBackgroundColor(128, 128, 64)
+	love.graphics.setDefaultFilter( "nearest", "nearest" )
+end
+
+-------------------------------------------------------------------------------
+local function setColor( name, alpha )
+	local color = rgb[ name ]
+	if color then
+		love.graphics.setColor( color.r, color.g, color.b, alpha )
+	else
+		error( "bad color name: " .. name )
+	end
 end
 
 -------------------------------------------------------------------------------
 function love.draw()
 	love.graphics.scale( conf.SCALE_GRAPHICS )
+
 	--junk.drawText()
 
 	imgui.prepare()
@@ -52,6 +72,26 @@ function love.draw()
 	imgui.finish()
 
 	text.draw()
+
+	setColor "white"
+
+	-- local x = 0
+	-- local y = 0
+	-- for _, img in pairs( button_grid ) do 
+	-- 	love.graphics.draw( img, x, y)
+	-- 	x = x + 10 + img:getWidth()
+	-- 	if x > 170 then
+	-- 		y = y + 64
+	-- 		x = 0
+	-- 	end
+	-- end
+	--love.graphics.draw( button_grid[ "top-left" ] )
+	--love.graphics.draw( button_grid[ "top" ])
+	--love.graphics.draw( button_grid[ "top-right" ], 0, 0)
+	imgui.grid9.draw( button_grid, 0, 0, 120, 100 )
+	draw.hline(100.5)
+	draw.vline(120.5)
+
 end
 
 -------------------------------------------------------------------------------
